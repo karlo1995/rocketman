@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,7 +7,8 @@ namespace Runtime.Levels
     public class StageDetails : ScriptableObject
     {
         public Platforms[] Platforms;
-        public Sprite BackgroundSprite;
+        public PlatformPrefab[] PlatformPrefab;
+
         public bool IsLastStage;
         public bool IsNextStageBoss;
     }
@@ -21,10 +21,16 @@ namespace Runtime.Levels
     }
 
     [System.Serializable]
+    public class PlatformPrefab
+    {
+        public string PlatformId;
+        public GameObject PlatformObject;
+    }
+    
+    [System.Serializable]
     public class PlatformData
     {
         public string PlatformId;
         public Vector2 PlatformPosition;
-        public Sprite PlatformSprite;
     }
 }

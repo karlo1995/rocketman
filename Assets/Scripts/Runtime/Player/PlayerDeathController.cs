@@ -19,7 +19,7 @@ public class PlayerDeathController : MonoBehaviour
     {
         if (transform.position.y < failThreshold)
         {
-            PlayerDragController.Instance.SetCanDrag(false);
+           // PlayerDragController.Instance.SetCanDrag(false);
             livesCount--;
             //_hasFailed = true;
             //_bodyCollision.enabled = false;
@@ -48,7 +48,7 @@ public class PlayerDeathController : MonoBehaviour
             // }
           //  else
             {
-                LevelManager.Instance.ResetLevel();
+                //LevelManager.Instance.ResetLevel();
             }
 
             // _livesText.text = _lives.ToString();

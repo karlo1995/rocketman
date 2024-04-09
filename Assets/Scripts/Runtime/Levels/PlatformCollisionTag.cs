@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformTriggerItem : MonoBehaviour
+public class PlatformCollisionTag : MonoBehaviour
 {
     [SerializeField] private Platform platform;
     public Platform Platform => platform;

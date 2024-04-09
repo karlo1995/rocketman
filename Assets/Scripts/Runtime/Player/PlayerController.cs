@@ -212,7 +212,7 @@ internal class PlayerController : MonoBehaviour
             }
             else
             {
-                LevelManager.Instance.ResetLevel();
+                //LevelManager.Instance.ResetLevel();
             }
 
             _livesText.text = _lives.ToString();

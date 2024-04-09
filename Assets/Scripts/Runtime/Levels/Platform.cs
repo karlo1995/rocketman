@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using DG.Tweening;
 using Runtime.Ads;
 using Runtime.Manager;
 using Runtime.Map_Controller;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Platform : MonoBehaviour
 {
@@ -21,7 +19,6 @@ public class Platform : MonoBehaviour
 
     private PlatformTimer _platformTimer;
     private Collider2D _col;
-    private SpriteRenderer _spriteRenderer;
 
     [ShowInInspector] private int levelPlatform;
 
@@ -33,7 +30,6 @@ public class Platform : MonoBehaviour
     {
         _platformTimer = GetComponent<PlatformTimer>();
         _col = GetComponent<Collider2D>();        
-        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public Vector2 GetSpawnPosition()
@@ -46,17 +42,21 @@ public class Platform : MonoBehaviour
         return launchPosition.position;
     }
     
-    public void InitPlatform(Sprite platformSprite, Vector2 platformPosition, int levelPlatform, int spawnedPlatformIndex)
+    public void InitPlatform(Vector2 platformPosition, int levelPlatform, int spawnedPlatformIndex)
     {
         this.levelPlatform = levelPlatform;
         this.spawnedPlatformIndex = spawnedPlatformIndex;
         
-        _spriteRenderer.sprite = platformSprite;
         transform.DOMove(platformPosition, 0f);
         
         ResetPlatform();
         _col.enabled = true;
         gameObject.SetActive(true);
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        Debug.Log("collided!");
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -68,11 +68,6 @@ public class Platform : MonoBehaviour
             if (!_hasBeenTouched) return;
 
             _col.enabled = false;
-
-            foreach (Transform child in transform)
-            {
-//                child.GetComponent<Collider2D>().enabled = false;
-            }
         }
     }
 

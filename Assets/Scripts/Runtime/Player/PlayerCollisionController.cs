@@ -7,15 +7,16 @@ public class PlayerCollisionController : MonoBehaviour
 {
     private Platform collidedPlatform;
     
-    private void OnTriggerEnter2D(Collider2D col)
+    private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.TryGetComponent(out PlatformTriggerItem platformTriggerItem))
+        if (col.gameObject.TryGetComponent(out PlatformCollisionTag platformTriggerItem))
         {
             collidedPlatform = platformTriggerItem.Platform;
             PlayerDragController.Instance.SetCollidedPlatform(platformTriggerItem.Platform);
             platformTriggerItem.Platform.StartCollisionBehaviors();
             
             PlayerAnimationController.Instance.PlayAnimation("mediumlanding", false);
+            PlayerDragController.Instance.SetCanDrag(true);
         }
     }
 }

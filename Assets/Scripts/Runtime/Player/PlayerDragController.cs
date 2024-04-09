@@ -1,10 +1,9 @@
 using Cinemachine;
+using Script.Misc;
 using UnityEngine;
 
-public class PlayerDragController : MonoBehaviour
+public class PlayerDragController : Singleton<PlayerDragController>
 {
-    public static PlayerDragController Instance;
-    [SerializeField] private CinemachineVirtualCamera vcCamera;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Rigidbody2D rigidbody2D;
     [SerializeField] private float dragLimit = 3f;
@@ -14,7 +13,7 @@ public class PlayerDragController : MonoBehaviour
     private Platform collidedPlatform;
 
     private bool isDragging;
-    private bool canDrag;
+    public bool canDrag;
     private bool isReleased;
 
     private Vector2 finalForce;
@@ -42,18 +41,13 @@ public class PlayerDragController : MonoBehaviour
         if (this.canDrag)
         {
             PlayerAnimationController.Instance.PlayAnimation("idle", true);
-            vcCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = 0.8f;
-            vcCamera.m_Lens.OrthographicSize = 5f;
+            // vcCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = 0.8f;
+            // vcCamera.m_Lens.OrthographicSize = 5f;
 
             isReleased = false;
         }
     }
-
-    private void Awake()
-    {
-        Instance = this;
-    }
-
+    
     private void Start()
     {
         mainCamera = Camera.main;
@@ -148,7 +142,6 @@ public class PlayerDragController : MonoBehaviour
     private void PlayThruster()
     {
         PlayerAnimationController.Instance.PlayAnimation("floating", true);
-        vcCamera.m_Lens.OrthographicSize = 7f;
         
         if (collidedPlatform != null)
         {

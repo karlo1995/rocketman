@@ -1,97 +1,95 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using Cinemachine;
 using Sirenix.OdinInspector;
 using System.Threading.Tasks;
+using Cinemachine;
 using DG.Tweening;
 using Runtime.Levels;
 using Runtime.Manager;
 using Runtime.Map_Controller;
+using Script.Misc;
 using UnityEngine.SceneManagement;
 
-//TODO: Clear current list except first two if we die
-public class LevelManager : SerializedMonoBehaviour
+public class LevelManager : Singleton<LevelManager>
 {
-    public static LevelManager Instance { get; private set; }
+    [SerializeField] private int platformPoolBaseAmount;
+    [SerializeField] private CinemachineVirtualCamera cmVirtualCamera;
+    
+    [ShowInInspector] private Platforms[] stagePlatforms;
+    [ShowInInspector] private StageDetails currentStageDetails;
+    [ShowInInspector] private Dictionary<int, List<Platform>> spawnedPlatforms = new();
 
-    [Header("Level")] [SerializeField] private AudioClip _levelUpSFX;
-    [SerializeField] private TextMeshProUGUI _levelText;
-    private int _level = 0;
-
-    [Header("Camera")] [SerializeField] private CinemachineVirtualCamera _camera;
-
-    [Header("Platform")] [SerializeField] private SpriteRenderer _levelBG;
-
-    [SerializeField] private int _levelIndex; //Any reason why this is visible in the inspector?
-
-    //[SerializeField] private List<List<PlatformData>> _platformDatas = new List<List<PlatformData>>();
-    private int _platformIndex;
-    private Vector2 _pastPos;
-    private bool _resettedLevel;
+    private int levelIndex;
+    private int platformIndex;
+    private Vector2 pastPos;
+    private bool resetLevel;
 
     private Platform spawnPointPlatform;
-
-    [ShowInInspector] private Platforms[] _stagePlatforms;
-    [ShowInInspector] private StageDetails _currentStageDetails;
-
-    [SerializeField] private GameObject platformPrefab;
-    [SerializeField] private int platformPoolBaseAmount;
-    private readonly List<Platform> platformPrefabPool = new();
+    [ShowInInspector] private readonly Dictionary<string, List<Platform>> platformPrefabPool = new();
 
     public int spawnedPlatformCount;
     public int levelCount;
-
-    [ShowInInspector] private Dictionary<int, List<Platform>> spawnedPlatforms = new();
-
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-
-        CreateInitialPlatformPool();
-    }
-
+    
     private void Start()
     {
         SetNewStage();
     }
 
-    private void CreateInitialPlatformPool()
+    private void CreateInitialPlatformPool(PlatformPrefab[] platformPrefabArray)
     {
-        for (var i = 0; i < platformPoolBaseAmount; i++)
+        foreach (var prefabToInstantiate in platformPrefabArray)
         {
-            var platform = Instantiate(platformPrefab, transform);
-            platformPrefabPool.Add(platform.GetComponent<Platform>());
-            platform.gameObject.SetActive(false);
-        }
-    }
-
-    private Platform GetPlatform()
-    {
-        foreach (var platform in platformPrefabPool)
-        {
-            if (!platform.gameObject.activeInHierarchy && !platform.gameObject.activeSelf)
+            for (var i = 0; i < platformPoolBaseAmount; i++)
             {
-                return platform;
+                var instantiatedPlatform = Instantiate(prefabToInstantiate.PlatformObject, transform);
+                var platformComponent = instantiatedPlatform.GetComponent<Platform>();
+
+                if (platformPrefabPool.ContainsKey(prefabToInstantiate.PlatformId))
+                {
+                    platformPrefabPool[prefabToInstantiate.PlatformId].Add(platformComponent);
+                }
+                else
+                {
+                    platformPrefabPool.Add(prefabToInstantiate.PlatformId, new List<Platform> { platformComponent });
+                }
+                
+                instantiatedPlatform.gameObject.SetActive(false);
             }
         }
-
-        //if there are no available platform, create a new one then return
-        var newPlatform = Instantiate(platformPrefab, transform);
-        platformPrefabPool.Add(newPlatform.GetComponent<Platform>());
-        return newPlatform.GetComponent<Platform>();
     }
 
-    public bool IsLastStage()
+    private Platform GetPlatform(PlatformData platformDetails)
     {
-        return _currentStageDetails.IsLastStage;
+        if (platformPrefabPool.ContainsKey(platformDetails.PlatformId))
+        {
+            foreach (var platform in platformPrefabPool[platformDetails.PlatformId])
+            {
+                if (!platform.gameObject.activeInHierarchy && !platform.gameObject.activeSelf)
+                {
+                    return platform;
+                }
+            }
+            
+            //if there are no available platform, create a new one then return
+            var newPlatform = Instantiate(platformPrefabPool[platformDetails.PlatformId][0], transform);
+            platformPrefabPool[platformDetails.PlatformId].Add(newPlatform.GetComponent<Platform>());
+            return newPlatform.GetComponent<Platform>();
+        }
+
+        //if the platform is not instantiated at start, check your scriptable platform details
+        Debug.Log("No Platform found in pool for platform " + platformDetails.PlatformId);
+        return null;
+    }
+
+    private bool IsLastStage()
+    {
+        return currentStageDetails.IsLastStage;
     }
 
     public bool IsNextStageBoss()
     {
-        return _currentStageDetails.IsNextStageBoss;
+        return currentStageDetails.IsNextStageBoss;
     }
 
     private void SetNewStage()
@@ -102,14 +100,13 @@ public class LevelManager : SerializedMonoBehaviour
         var levelDataName = "Stage Data/Stage " + PlayerDataManager.Instance.CurrentStageLevel;
         //var levelDataName = "Stage Data/Test Stage " + PlayerDataManager.Instance.CurrentStageLevel;
 
-        _currentStageDetails = Resources.Load<StageDetails>(levelDataName);
-        _stagePlatforms = new Platforms[] { };
+        currentStageDetails = Resources.Load<StageDetails>(levelDataName);
+        CreateInitialPlatformPool(currentStageDetails.PlatformPrefab);
+        stagePlatforms = new Platforms[] { };
 
         if (!IsLastStage())
         {
-            //  _platformDatas = _currentStageDetails.PlatformDatas;
-            //_levelBG.sprite = _currentStageDetails.BackgroundSprite;
-            _stagePlatforms = _currentStageDetails.Platforms;
+            stagePlatforms = currentStageDetails.Platforms;
             PlayerDataManager.Instance.AddStageLevel();
         }
         else
@@ -118,8 +115,8 @@ public class LevelManager : SerializedMonoBehaviour
             SceneManager.LoadScene(2);
         }
 
-        _platformIndex = 0;
-        _levelIndex = 0;
+        platformIndex = 0;
+        levelIndex = 0;
 
         SpawnPlatforms();
     }
@@ -146,9 +143,9 @@ public class LevelManager : SerializedMonoBehaviour
 
         while (true)
         {
-            if (levelCount < _stagePlatforms.Length)
+            if (levelCount < stagePlatforms.Length)
             {
-                if (spawnedPlatformCount < _stagePlatforms[levelCount].PlatformData.Length)
+                if (spawnedPlatformCount < stagePlatforms[levelCount].PlatformData.Length)
                 {
                     //check if the platform is already spawn, to avoid spawning the same platform twice
                     var isAlreadySpawn = false;
@@ -168,9 +165,9 @@ public class LevelManager : SerializedMonoBehaviour
                     //spawned platform will be added to the spawned platform list
                     if (!isAlreadySpawn)
                     {
-                        var platformDetails = _stagePlatforms[levelCount].PlatformData[spawnedPlatformCount];
-                        var platform = GetPlatform();
-                        platform.InitPlatform(platformDetails.PlatformSprite, platformDetails.PlatformPosition, levelCount, spawnedPlatformCount);
+                        var platformDetails = stagePlatforms[levelCount].PlatformData[spawnedPlatformCount];
+                        var platform = GetPlatform(platformDetails);
+                        platform.InitPlatform(platformDetails.PlatformPosition, levelCount, spawnedPlatformCount);
 
                         if (spawnedPlatforms.ContainsKey(levelCount))
                         {
@@ -247,8 +244,7 @@ public class LevelManager : SerializedMonoBehaviour
         var platforms = GetCurrentSpawnedPlatform();
         if (platforms != null)
         {
-            //_camera.Follow = GetCurrentSpawnedPlatform()[0].CameraPosition;
-            
+            cmVirtualCamera.Follow = GetCurrentSpawnedPlatform()[0].CameraPosition;
             Invoke(nameof(UpdateGameSettings), 1f);
         }
     }
