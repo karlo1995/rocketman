@@ -1,0 +1,4 @@
+the bell sounds once for each bonus they earn on a jump...
+big bonusses (specials) are the big gong, and the rest are
+the small sound. May need to time these one after the other but quickly,
+as well as the actual bonus +## indicators shoudl not appear all at once.

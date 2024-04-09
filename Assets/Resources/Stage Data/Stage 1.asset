@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e01fa7760ff0f0a4fb9441c48961f7e9, type: 3}
+  m_Name: Stage 1
+  m_EditorClassIdentifier: 
+  Platforms:
+  - PlatformData:
+    - PlatformId: 1
+      PlatformPosition: {x: 0, y: 0}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 2
+      PlatformPosition: {x: 5, y: 0}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 8, y: 3}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 12, y: 5}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 15, y: 9}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 18, y: 15}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 22, y: 19}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 25, y: 25}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 29, y: 25}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 31, y: 28}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 39, y: 31}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  - PlatformData:
+    - PlatformId: 
+      PlatformPosition: {x: 45, y: 35}
+      PlatformSprite: {fileID: 452378771, guid: 28d8ab9c047e02d4fa19820cd2d62a10, type: 3}
+  BackgroundSprite: {fileID: 393818702, guid: 3b9f73ca573eecc4784cfb4735d29fa2, type: 3}
+  IsLastStage: 0
+  IsNextStageBoss: 1
