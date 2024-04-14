@@ -15,9 +15,10 @@ MonoBehaviour:
   Platforms:
   - PlatformData:
     - PlatformId: opening_stage1
-      PlatformPosition: {x: -14, y: -10}
+      PlatformPosition: {x: -14, y: -8.9}
+  - PlatformData:
     - PlatformId: short_stage1
-      PlatformPosition: {x: -6.5, y: -8.5}
+      PlatformPosition: {x: -9, y: -8.24}
   - PlatformData:
     - PlatformId: short_stage1
       PlatformPosition: {x: -2, y: -8.5}

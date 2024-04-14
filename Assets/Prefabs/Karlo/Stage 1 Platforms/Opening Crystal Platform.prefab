@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 732302908652708709}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.43, z: 0}
+  m_LocalPosition: {x: 0, y: 5.47, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42,9 +42,9 @@ GameObject:
   - component: {fileID: 2115283656361781500}
   - component: {fileID: 8316666462726712342}
   - component: {fileID: 2405029307180386799}
-  - component: {fileID: 4141139955486522754}
+  - component: {fileID: 5209471005387262636}
   m_Layer: 0
-  m_Name: Platform Trigger
+  m_Name: Platform Landing Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,7 +58,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5860301366997505030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.006, y: 0.855, z: 0}
+  m_LocalPosition: {x: -0.006, y: 5.43, z: 0}
   m_LocalScale: {x: 1.477445, y: 0.056014374, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -162,7 +162,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &4141139955486522754
+--- !u!114 &5209471005387262636
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,10 +171,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5860301366997505030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ace3fcbcf18b16245b0a8ff037cb839d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b6067143c7036549825397a4afe2218, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platform: {fileID: 2508640286787610128}
 --- !u!1 &7166026444547004142
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,7 +216,6 @@ GameObject:
   - component: {fileID: 2622156843570146798}
   - component: {fileID: 9094143120858705326}
   - component: {fileID: 2508640286787610128}
-  - component: {fileID: 7927987822995237032}
   - component: {fileID: 8519292841125408153}
   - component: {fileID: 7566302524634437892}
   m_Layer: 0
@@ -236,7 +234,7 @@ Transform:
   m_GameObject: {fileID: 7797116940387084849}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -55.4, y: -12.7, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2859014607290068104}
@@ -311,24 +309,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c137ec9ee7bcfe46bc2b1636d5ba3bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isRegularPlatform: 0
   spawnPosition: {fileID: 2859014607290068104}
   launchPosition: {fileID: 2548275015286671029}
+  landingTrigger:
+  - {fileID: 8519292841125408153}
+  - {fileID: 2405029307180386799}
+  canlog: 0
   cameraPosition: {fileID: 4916806853958399240}
-  LastOne: 0
---- !u!114 &7927987822995237032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7797116940387084849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ace3fcbcf18b16245b0a8ff037cb839d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  platform: {fileID: 2508640286787610128}
 --- !u!61 &8519292841125408153
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -417,7 +404,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8003161068625679546}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7, y: 3.37, z: 0}
+  m_LocalPosition: {x: 10.4, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

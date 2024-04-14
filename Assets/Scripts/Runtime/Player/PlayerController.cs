@@ -267,7 +267,7 @@ internal class PlayerController : MonoBehaviour
 
             if (_isFalling && transform.position.y >= platform.transform.position.y)
             {
-                if (!platform.StartPlatformTimer()) return;
+                //if (!platform.StartPlatformTimer()) return;
                 var positionToJump = new Vector2(transform.position.x + 10f, transform.position.y + 10f);
                 // cinemachineVirtualCamera.Follow = transform;
                 //
@@ -276,7 +276,7 @@ internal class PlayerController : MonoBehaviour
                 //     //cinemachineVirtualCamera.enabled = true;
                 //     cinemachineVirtualCamera.Follow = transform;
                 // });
-                platform.StartCollisionBehaviors(_isBossRound);
+               // platform.StartCollisionBehaviors(_isBossRound);
                 _platCol = collision.gameObject.GetComponent<Collider2D>();
                 _rb.velocity = Vector2.zero;
 

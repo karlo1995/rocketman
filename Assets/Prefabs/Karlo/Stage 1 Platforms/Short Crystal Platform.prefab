@@ -137,7 +137,6 @@ GameObject:
   - component: {fileID: 8310762783729262138}
   - component: {fileID: 8018519583403050442}
   - component: {fileID: 3530699467782732863}
-  - component: {fileID: 2930966274320386605}
   m_Layer: 0
   m_Name: Short Crystal Platform
   m_TagString: Platform
@@ -154,7 +153,7 @@ Transform:
   m_GameObject: {fileID: 1934180242689123269}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -55.4, y: -12.7, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1500500785035327030}
@@ -229,11 +228,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c137ec9ee7bcfe46bc2b1636d5ba3bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isRegularPlatform: 0
   spawnPosition: {fileID: 1500500785035327030}
   launchPosition: {fileID: 831291638348744884}
+  landingTrigger:
+  - {fileID: 8018519583403050442}
+  - {fileID: 6214817082477547236}
+  canlog: 0
   cameraPosition: {fileID: 4501270949002923812}
-  LastOne: 0
 --- !u!61 &8018519583403050442
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -298,19 +299,6 @@ PlatformEffector2D:
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 1
---- !u!114 &2930966274320386605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1934180242689123269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ace3fcbcf18b16245b0a8ff037cb839d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  platform: {fileID: 8310762783729262138}
 --- !u!1 &5127449602252183392
 GameObject:
   m_ObjectHideFlags: 0
@@ -335,7 +323,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5127449602252183392}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.43, z: 0}
+  m_LocalPosition: {x: 0, y: 3.83, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -353,7 +341,7 @@ GameObject:
   - component: {fileID: 871839446799838124}
   - component: {fileID: 8236524881261746147}
   - component: {fileID: 6214817082477547236}
-  - component: {fileID: 2348676991943140136}
+  - component: {fileID: 7500951261269922063}
   m_Layer: 0
   m_Name: Platform Trigger
   m_TagString: Untagged
@@ -369,7 +357,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7192956081615195752}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.006, y: 0.855, z: 0}
+  m_LocalPosition: {x: -0.006, y: 3.02, z: 0}
   m_LocalScale: {x: 1.477445, y: 0.056014374, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -473,7 +461,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &2348676991943140136
+--- !u!114 &7500951261269922063
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -482,10 +470,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7192956081615195752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ace3fcbcf18b16245b0a8ff037cb839d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b6067143c7036549825397a4afe2218, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platform: {fileID: 8310762783729262138}
 --- !u!1 &7542465968871026758
 GameObject:
   m_ObjectHideFlags: 0

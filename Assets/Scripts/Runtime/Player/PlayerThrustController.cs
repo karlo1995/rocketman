@@ -59,7 +59,7 @@ public class PlayerThrustController : MonoBehaviour
                 {
                     virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = 0.8f;
 
-                    PlayerAnimationController.Instance.PlayAnimation("thrusting", true);
+                    PlayerAnimationController.Instance.PlayAnimation(AnimationNames.THRUST_ANIMATION_NAME, true);
                     rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + fuelSpeed / 10f, rigidbody2D.velocity.y + fuelSpeed);
                 }
                 else
@@ -81,7 +81,7 @@ public class PlayerThrustController : MonoBehaviour
                 isBraked = false;
                 canThrust = false;
                 
-                PlayerAnimationController.Instance.PlayAnimation("hardbreak", false);
+                PlayerAnimationController.Instance.PlayAnimation(AnimationNames.BRAKE_ANIMATION_NAME, false);
                 
                 rigidbody2D.AddForce(-brakeSpeed * rigidbody2D.velocity);
                 //rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x / 2 - brakeSpeed, rigidbody2D.velocity.y);

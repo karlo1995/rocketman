@@ -244,6 +244,7 @@ public class LevelManager : Singleton<LevelManager>
         var platforms = GetCurrentSpawnedPlatform();
         if (platforms != null)
         {
+            Debug.Log("smove camera!!");
             cmVirtualCamera.Follow = GetCurrentSpawnedPlatform()[0].CameraPosition;
             Invoke(nameof(UpdateGameSettings), 1f);
         }
@@ -252,7 +253,7 @@ public class LevelManager : Singleton<LevelManager>
     private void UpdateGameSettings()
     {
         WallController.Instance.UpdateWallPosition();
-        PlayerDragController.Instance.SetCanDrag(true);
+        PlayerDragController.Instance.SetCanDrag();
     }
 
     private void TurnOnRadar()
@@ -262,6 +263,7 @@ public class LevelManager : Singleton<LevelManager>
     
     public void SpawnNextPlatform(int levelPlatform)
     {
+        Debug.Log("Spawn platform");
         Invoke(nameof(TurnOnRadar), 2f);
 
         if (levelPlatform > 0)
@@ -361,8 +363,10 @@ public class LevelManager : Singleton<LevelManager>
                     //make sure to set active true only the first 2 platform in the level
                     platforms[i].gameObject.SetActive(i < 2);
                     
-                    PlayerDragController.Instance.SetCanDrag(true);
+                    PlayerDragController.Instance.SetCanDrag();
                 }
+                
+                PlayerDeathController.Instance.ResetDropStatus();
             });
         });
     }
