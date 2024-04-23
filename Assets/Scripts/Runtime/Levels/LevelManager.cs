@@ -263,7 +263,6 @@ public class LevelManager : Singleton<LevelManager>
     
     public void SpawnNextPlatform(int levelPlatform)
     {
-        Debug.Log("Spawn platform");
         Invoke(nameof(TurnOnRadar), 2f);
 
         if (levelPlatform > 0)
@@ -336,7 +335,6 @@ public class LevelManager : Singleton<LevelManager>
 
     public async Task ResetLevel()
     {
-        Debug.Log("RESET LEVEL");
         Invoke(nameof(TurnOnRadar), 2f);
 
         //remove the spawned platforms for the next level

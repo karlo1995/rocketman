@@ -1,15 +1,14 @@
-using Cinemachine;
-using DG.Tweening;
 using Script.Misc;
 using UnityEngine;
 
 public class PlayerDragController : Singleton<PlayerDragController>
 {
-    [SerializeField] private SpriteRenderer arrowToolSpriteRenderer;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Rigidbody2D rigidbody2D;
     [SerializeField] private float dragLimit = 3f;
     [SerializeField] private float forceToAdd = 10f;
+
+    [SerializeField] private DragVisualController dragVisualController;
 
     private Camera mainCamera;
     private Platform collidedPlatform;
@@ -42,7 +41,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
         canDrag = true;
         isReleased = false;
     }
-    
+
     private void Start()
     {
         mainCamera = Camera.main;
@@ -85,14 +84,23 @@ public class PlayerDragController : Singleton<PlayerDragController>
         isDragging = true;
 
         lineRenderer.SetPosition(DragStyleController.Instance.IsAngryBirdController ? 1 : 0, mousePosition);
+        dragVisualController.SetActiveRadar(true);
     }
 
     private void Drag()
     {
         var startPos = lineRenderer.GetPosition(DragStyleController.Instance.IsAngryBirdController ? 1 : 0);
         var currentPos = mousePosition;
+        
         var distance = currentPos - startPos;
-
+        
+        // if (currentPos.x > 4.73f)
+        // {
+        //     currentPos.x = 4.73f;
+        //     currentPos.y = 0.2f;
+        // }
+      //  var angle = Mathf.Atan2(trajectoryDistance.y, trajectoryDistance.x) * Mathf.Rad2Deg;
+      
         if (distance.magnitude <= dragLimit)
         {
             lineRenderer.SetPosition(DragStyleController.Instance.IsAngryBirdController ? 0 : 1, currentPos);
@@ -102,34 +110,18 @@ public class PlayerDragController : Singleton<PlayerDragController>
             var limitVector = startPos + (distance.normalized * dragLimit);
             lineRenderer.SetPosition(DragStyleController.Instance.IsAngryBirdController ? 0 : 1, limitVector);
         }
-        
+
         var trajectoryCurrent = lineRenderer.GetPosition(1);
         var trajectoryStartPos = lineRenderer.GetPosition(0);
         var trajectoryDistance = trajectoryCurrent - trajectoryStartPos;
         var finalForce = trajectoryDistance * forceToAdd;
-        
-        // TrajectoryController.Instance.UpdateDots(rigidbody2D.transform.position, -finalForce);
-        // TrajectoryController.Instance.Show();
-        
-        var angle = Mathf.Atan2(trajectoryDistance.y, trajectoryDistance.x) * Mathf.Rad2Deg;
-        angle += 500f;
-        
-        
-        arrowToolSpriteRenderer.transform.DORotate(new Vector3(0f, 0f, angle), 0.2f);
 
-        var scale = finalForce.magnitude * 0.1f;
-        if (scale < 0.3f)
-        {
-            scale = 0.3f;
-        }
 
-        if (scale > 0.9f)
-        {
-            scale = 0.9f;
-        }
-        
-        //arrowToolSpriteRenderer.transform.DOMove(new Vector2(trajectoryCurrent.x, trajectoryCurrent.y), 0.1f);
-        arrowToolSpriteRenderer.transform.DOScale(new Vector2(scale, scale), 0.3f);
+        //var angle = Mathf.Atan2(trajectoryDistance.y, trajectoryDistance.x) * Mathf.Rad2Deg;
+        //angle += 500f;
+
+
+        dragVisualController.SetRadarDirectionAndArrow(finalForce, trajectoryDistance);
     }
 
     private void DragEnd()
@@ -138,7 +130,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
         isDragging = false;
         lineRenderer.enabled = false;
 
-        TrajectoryController.Instance.Hide();
+        dragVisualController.SetActiveRadar(false);
 
         var startPos = lineRenderer.GetPosition(0);
         var currentPos = lineRenderer.GetPosition(1);
@@ -154,12 +146,13 @@ public class PlayerDragController : Singleton<PlayerDragController>
     private void PlayThruster()
     {
         PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
-        
+        PlayerAnimationController.Instance.PlayThrusterAnimation(true);
+
         if (collidedPlatform != null)
         {
             collidedPlatform.PlayerDragOut();
         }
-        
+
         rigidbody2D.AddForce(-finalForce, ForceMode2D.Impulse);
         isReleased = true;
     }

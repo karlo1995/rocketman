@@ -23,6 +23,7 @@ public class PlayerCollisionController : MonoBehaviour
         {
             if (transform.position.y > platform.transform.position.y)
             {
+                PlayerAnimationController.Instance.PlayThrusterAnimation(false);
                 PlayerAnimationController.Instance.PlayAnimation(AnimationNames.MED_LANDING_ANIMATION_NAME, false);
             }
         }
@@ -31,6 +32,7 @@ public class PlayerCollisionController : MonoBehaviour
     private IEnumerator SetPlayerIdleAnimation()
     {
         yield return new WaitForSeconds(1f);
+        PlayerAnimationController.Instance.PlayThrusterAnimation(false);
         PlayerAnimationController.Instance.PlayAnimation(AnimationNames.IDLE_ANIMATION_NAME, true);
     }
 

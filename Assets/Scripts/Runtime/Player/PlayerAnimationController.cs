@@ -4,16 +4,31 @@ using UnityEngine;
 
 public class PlayerAnimationController : Singleton<PlayerAnimationController>
 {
-    [SerializeField] private SkeletonAnimation skeletonAnimation;
+    [SerializeField] private SkeletonAnimation spineSkeleton;
     [SerializeField] private Rigidbody2D rigidbody2D;
-    
+
+    [SerializeField] private SkeletonAnimation[] thrusterAnimations;
+
+    private void Awake()
+    {
+        PlayThrusterAnimation(false);
+        PlayAnimation(AnimationNames.IDLE_ANIMATION_NAME, true);
+    }
+
     public void PlayAnimation(string animationName, bool isLoop)
     {
-        var animName = "novanerd_" + animationName;
-        if (skeletonAnimation.AnimationName != animName)
+        if (spineSkeleton.AnimationName != animationName)
         {
-            skeletonAnimation.loop = isLoop;
-            skeletonAnimation.AnimationName = animName;
+            spineSkeleton.loop = isLoop;
+            spineSkeleton.AnimationName = animationName;
+        }
+    }
+    
+    public void PlayThrusterAnimation(bool open)
+    {
+        foreach (var thruster in thrusterAnimations)
+        {
+            thruster.gameObject.SetActive(open);
         }
     }
 
@@ -21,11 +36,11 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
     {
         var vel = transform.rotation * rigidbody2D.velocity;
 
-        skeletonAnimation.skeleton.FlipX = vel.x switch
+        spineSkeleton.skeleton.FlipX = vel.x switch
         {
             > 0 => true,
             < 0 => false,
-            _ => skeletonAnimation.skeleton.FlipX
+            _ => spineSkeleton.skeleton.FlipX
         };
     }
 }
