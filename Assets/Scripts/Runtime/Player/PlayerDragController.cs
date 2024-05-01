@@ -1,3 +1,4 @@
+using System.Collections;
 using Script.Misc;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
     private Platform collidedPlatform;
 
     private bool isDragging;
-    public bool canDrag;
+    private bool canDrag;
 
     private Vector2 finalForce;
 
@@ -38,6 +39,12 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     public void SetCanDrag()
     {
+        StartCoroutine(SetActiveDrag());
+    }
+
+    private IEnumerator SetActiveDrag()
+    {
+        yield return new WaitForSeconds(1f);
         canDrag = true;
         isReleased = false;
     }
@@ -91,23 +98,23 @@ public class PlayerDragController : Singleton<PlayerDragController>
     {
         var startPos = lineRenderer.GetPosition(DragStyleController.Instance.IsAngryBirdController ? 1 : 0);
         var currentPos = mousePosition;
-        
+
         var distance = currentPos - startPos;
-        
+
         // if (currentPos.x > 4.73f)
         // {
         //     currentPos.x = 4.73f;
         //     currentPos.y = 0.2f;
         // }
-      //  var angle = Mathf.Atan2(trajectoryDistance.y, trajectoryDistance.x) * Mathf.Rad2Deg;
-      
+        //  var angle = Mathf.Atan2(trajectoryDistance.y, trajectoryDistance.x) * Mathf.Rad2Deg;
+
         if (distance.magnitude <= dragLimit)
         {
             lineRenderer.SetPosition(DragStyleController.Instance.IsAngryBirdController ? 0 : 1, currentPos);
         }
         else
         {
-            var limitVector = startPos + (distance.normalized * dragLimit);
+            var limitVector = startPos + distance.normalized * dragLimit;
             lineRenderer.SetPosition(DragStyleController.Instance.IsAngryBirdController ? 0 : 1, limitVector);
         }
 
@@ -137,16 +144,24 @@ public class PlayerDragController : Singleton<PlayerDragController>
         var distance = currentPos - startPos;
         finalForce = distance * forceToAdd;
 
-        PlayerAnimationController.Instance.PlayAnimation
-            (distance.magnitude >= 2.5f ? AnimationNames.HARD_LAUNCH_ANIMATION_NAME : AnimationNames.SOFT_LAUNCH_ANIMATION_NAME, false);
+        if (distance.magnitude >= 2.5f)
+        {
+            Invoke(nameof(PlayThruster), 0.5f);
+            PlayerAnimationController.Instance.PlayAnimation(AnimationNames.HARD_LAUNCH_ANIMATION_NAME, false);
+        }
+        else
+        {
+            rigidbody2D.velocity = Vector2.zero;
 
-        Invoke(nameof(PlayThruster), 0.4f);
+            Invoke(nameof(PlayThruster), 0.5f);
+            PlayerAnimationController.Instance.PlayAnimation(AnimationNames.SOFT_LAUNCH_ANIMATION_NAME, false);
+        }
     }
 
     private void PlayThruster()
     {
         PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
-        PlayerAnimationController.Instance.PlayThrusterAnimation(true);
+        PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
 
         if (collidedPlatform != null)
         {

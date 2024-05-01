@@ -11,9 +11,10 @@ public class DragVisualController : MonoBehaviour
     [SerializeField] private Image radarRight;
     [SerializeField] private CanvasGroup leftLabelGroup;
     [SerializeField] private CanvasGroup rightLabelGroup;
-    [SerializeField] private TextMeshProUGUI angleText;
-    [SerializeField] private TextMeshProUGUI powerText;
-
+    [SerializeField] private TextMeshProUGUI angleTextRight;
+    [SerializeField] private TextMeshProUGUI powerTextRight;
+    [SerializeField] private TextMeshProUGUI angleTextLeft;
+    [SerializeField] private TextMeshProUGUI powerTextLeft;
     private void Awake()
     {
         radarRight.DOFade(0f, 0f);
@@ -25,7 +26,8 @@ public class DragVisualController : MonoBehaviour
     
     public void SetRadarDirectionAndArrow(Vector3 finalForce, Vector3 trajectoryDistance)
     {
-        //set power
+        //set flip x 
+        PlayerAnimationController.Instance.FlipX(finalForce);
         
         //radar direction
         if (finalForce.x < 0)
@@ -66,7 +68,8 @@ public class DragVisualController : MonoBehaviour
         }
         
         var angleValue = Mathf.Abs((int)(adjustedAngle)) + "°";
-        angleText.text = angleValue;
+        angleTextRight.text = angleValue;
+        angleTextLeft.text = angleValue;
 
         //set drag arrow rotation
         angle += 500f;
@@ -74,18 +77,19 @@ public class DragVisualController : MonoBehaviour
         
         //set power value
         var power = (int)(finalForce.magnitude * 10);
-        powerText.text = power.ToString();
+        powerTextRight.text = power.ToString();
+        powerTextLeft.text = power.ToString();
 
         //set drag arrow scale
         var scale = finalForce.magnitude * 0.1f;
-        if (scale < 0.3f)
+        if (scale < 0.2f)
         {
-            scale = 0.3f;
+            scale = 0.2f;
         }
 
-        if (scale > 0.8f)
+        if (scale > 0.7f)
         {
-            scale = 0.8f;
+            scale = 0.7f;
         }
         
         arrowToolSpriteRenderer.transform.DOScale(new Vector2(scale, scale), 0.3f);

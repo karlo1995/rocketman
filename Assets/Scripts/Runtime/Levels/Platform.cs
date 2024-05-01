@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using DG.Tweening;
 using Runtime.Ads;
 using Runtime.Manager;
@@ -18,16 +19,18 @@ public class Platform : MonoBehaviour
 
     private Collider2D colliderAttached;
 
-    private int levelPlatform;
+    public int levelPlatform;
 
-    private int spawnedPlatformIndex;
+    public int spawnedPlatformIndex;
     public int SpawnedPlatformIndex => spawnedPlatformIndex;
 
+    private bool hasBeenCollidedOut;
+    
     private void Awake()
     {
         colliderAttached = GetComponent<Collider2D>();
     }
-    
+
     public Vector2 GetSpawnPosition()
     {
         return spawnPosition.position;
@@ -52,11 +55,27 @@ public class Platform : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
+        hasBeenCollidedOut = true;
+        
         if (!hasBeenTouched) return;
 
-        colliderAttached.enabled = false;
-    }
+        if (collision.gameObject.TryGetComponent(out PlayerCollisionController playerCollisionController))
+        {
+            playerCollisionController.SetIsLandedFalse();
+            colliderAttached.enabled = false;
 
+            if (false) //spawnedPlatformIndex == 0 && levelPlatform == 0)
+            {
+                LevelManager.Instance.SetPlatformToRemove(null);
+
+            }
+            else
+            {
+                LevelManager.Instance.SetPlatformToRemove(this);
+            }
+        }
+    }
+    
     public void PlayerDragOut()
     {
         if (!hasBeenTouched) return;
@@ -72,6 +91,7 @@ public class Platform : MonoBehaviour
     public void TurnOnCollision()
     {
         colliderAttached.enabled = true;
+        hasBeenCollidedOut = false;
         ResetPlatform();
     }
 
@@ -85,19 +105,33 @@ public class Platform : MonoBehaviour
     {
         if (hasBeenTouched) return;
 
-        //if (LastOne)
-        // {
-        //     Invoke(nameof(GoToNextStage), 2f);
-        //     return;
-        // }
-
-        //Only spawn next platform if LevelManager exists...We don't need this for bosses
-        //if (!isBoss)
+        if (spawnedPlatformIndex == 0 && levelPlatform == 0)
         {
-            LevelManager.Instance.SpawnNextPlatform(levelPlatform);
+            LevelManager.Instance.SpawnNextPlatform(levelPlatform, null);
+
+        }
+        else
+        {
+            LevelManager.Instance.SpawnNextPlatform(levelPlatform, this);
+        }
+        
+        hasBeenTouched = true;
+        
+        return;
+        StartCoroutine(StartSpawningPlatformCountdown());
+    }
+
+    private IEnumerator StartSpawningPlatformCountdown()
+    {
+        yield return new WaitForSeconds(1f);
+
+        if (!hasBeenCollidedOut)
+        {
+            LevelManager.Instance.SpawnNextPlatform(levelPlatform, this);
+            hasBeenTouched = true;
         }
 
-        hasBeenTouched = true;
+        hasBeenCollidedOut = false;
     }
 
     private void GoToNextStage()

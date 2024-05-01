@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerThrustController : MonoBehaviour
 {
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    //[SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Rigidbody2D rigidbody2D;
     [SerializeField] public float brakeSpeed;
     [SerializeField] public float fuelSpeed;
@@ -17,7 +17,7 @@ public class PlayerThrustController : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerDragController.Instance.IsReleased)
+        if (PlayerDragController.Instance.IsReleased && !PlayerCollisionController.Instance.IsLanded)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -57,13 +57,21 @@ public class PlayerThrustController : MonoBehaviour
             {
                 if (canThrust)
                 {
-                    virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = 0.8f;
+                    //virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = 0.8f;
 
                     PlayerAnimationController.Instance.PlayAnimation(AnimationNames.THRUST_ANIMATION_NAME, true);
-                    rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + fuelSpeed / 10f, rigidbody2D.velocity.y + fuelSpeed);
+                    PlayerAnimationController.Instance.PlayThrusterAnimation(true, true);
+
+                    rigidbody2D.velocity = PlayerAnimationController.Instance.GetPlayerFlipX() ? 
+                        new Vector2(rigidbody2D.velocity.x + fuelSpeed / 10f, rigidbody2D.velocity.y + fuelSpeed) : 
+                        new Vector2(rigidbody2D.velocity.x - fuelSpeed / 10f, rigidbody2D.velocity.y + fuelSpeed);
                 }
                 else
                 {
+                    PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, false);
+                    PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
+
+
                     // if (!isBraked)
                     // {
                     //     virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = 0.2f;
@@ -77,11 +85,12 @@ public class PlayerThrustController : MonoBehaviour
             }
             else if (isBraked)
             {
-                virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = 0.2f;
+                //virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = 0.2f;
                 isBraked = false;
                 canThrust = false;
-                
+
                 PlayerAnimationController.Instance.PlayAnimation(AnimationNames.BRAKE_ANIMATION_NAME, false);
+                PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
                 
                 rigidbody2D.AddForce(-brakeSpeed * rigidbody2D.velocity);
                 //rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x / 2 - brakeSpeed, rigidbody2D.velocity.y);

@@ -1,30 +1,49 @@
 using System.Collections;
+using Script.Misc;
 using UnityEngine;
 
-public class PlayerCollisionController : MonoBehaviour
+public class PlayerCollisionController : Singleton<PlayerCollisionController>
 {
+    public bool isLanded;
+    public bool IsLanded => isLanded;
+
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.TryGetComponent(out Platform platform))
+        if (col.enabled)
         {
-            if (transform.position.y > platform.transform.position.y)
+            if (col.gameObject.TryGetComponent(out Platform platform))
             {
-                PlayerDragController.Instance.SetCollidedPlatform(platform);
-                platform.StartCollisionBehaviors();
+                if (transform.position.y > platform.transform.position.y)
+                {
+                    Debug.Log("Collided!");
+                    isLanded = true;
+                    PlayerDragController.Instance.SetCollidedPlatform(platform);
+                    platform.StartCollisionBehaviors();
 
-                StartCoroutine(SetPlayerIdleAnimation());
+                    StartCoroutine(SetPlayerIdleAnimation());
+                    PlayerDragController.Instance.SetCanDrag();
+                }
             }
         }
     }
 
+    public void SetIsLandedFalse()
+    {
+        isLanded = false;
+    }
+    
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.TryGetComponent(out PlatformLandingTriggerTag platform))
+        //if (col.enabled)
         {
-            if (transform.position.y > platform.transform.position.y)
+            if (col.gameObject.TryGetComponent(out PlatformLandingTriggerTag platform))
             {
-                PlayerAnimationController.Instance.PlayThrusterAnimation(false);
-                PlayerAnimationController.Instance.PlayAnimation(AnimationNames.MED_LANDING_ANIMATION_NAME, false);
+                if (transform.position.y > platform.transform.position.y)
+                {
+                    isLanded = false;
+                    PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
+                    PlayerAnimationController.Instance.PlayAnimation(AnimationNames.MED_LANDING_ANIMATION_NAME, false);
+                }
             }
         }
     }
@@ -32,7 +51,7 @@ public class PlayerCollisionController : MonoBehaviour
     private IEnumerator SetPlayerIdleAnimation()
     {
         yield return new WaitForSeconds(1f);
-        PlayerAnimationController.Instance.PlayThrusterAnimation(false);
+        PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
         PlayerAnimationController.Instance.PlayAnimation(AnimationNames.IDLE_ANIMATION_NAME, true);
     }
 

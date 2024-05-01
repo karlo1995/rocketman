@@ -1,3 +1,4 @@
+using System;
 using Script.Misc;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
-
+    
     private void Update()
     {
         if (transform.position.y < failThreshold && !isDropped)

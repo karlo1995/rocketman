@@ -7,11 +7,17 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
     [SerializeField] private SkeletonAnimation spineSkeleton;
     [SerializeField] private Rigidbody2D rigidbody2D;
 
-    [SerializeField] private SkeletonAnimation[] thrusterAnimations;
+    [SerializeField] private SkeletonAnimation[] thrusterAnimationsHands;
+    [SerializeField] private SkeletonAnimation[] thrusterAnimationsFeet;
 
+    public bool GetPlayerFlipX()
+    {
+        return spineSkeleton.skeleton.FlipX;
+    }
+    
     private void Awake()
     {
-        PlayThrusterAnimation(false);
+        PlayThrusterAnimation(false, false);
         PlayAnimation(AnimationNames.IDLE_ANIMATION_NAME, true);
     }
 
@@ -23,23 +29,28 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
             spineSkeleton.AnimationName = animationName;
         }
     }
-    
-    public void PlayThrusterAnimation(bool open)
+
+    public void PlayThrusterAnimation(bool isFloating, bool isThrusting)
     {
-        foreach (var thruster in thrusterAnimations)
+        foreach (var thrusterHands in thrusterAnimationsHands)
         {
-            thruster.gameObject.SetActive(open);
+            thrusterHands.gameObject.SetActive(isFloating);
+        }
+        
+        foreach (var thrusterFeet in thrusterAnimationsFeet)
+        {
+            thrusterFeet.gameObject.SetActive(isThrusting);
         }
     }
 
-    private void Update()
+    public void FlipX(Vector3 position)
     {
-        var vel = transform.rotation * rigidbody2D.velocity;
+        var vel = transform.rotation * position;
 
         spineSkeleton.skeleton.FlipX = vel.x switch
         {
-            > 0 => true,
-            < 0 => false,
+            > 0 => false,
+            < 0 => true,
             _ => spineSkeleton.skeleton.FlipX
         };
     }
