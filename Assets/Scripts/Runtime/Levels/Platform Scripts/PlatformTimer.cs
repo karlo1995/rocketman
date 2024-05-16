@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Platform))]
+//[RequireComponent(typeof(Platform))]
 public class PlatformTimer : MonoBehaviour
 {
     [SerializeField] private float _lifetime = 5;

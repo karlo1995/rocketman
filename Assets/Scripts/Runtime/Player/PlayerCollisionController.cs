@@ -1,65 +1,107 @@
-using System.Collections;
+using Runtime.Levels.Platform_Scripts;
 using Script.Misc;
 using UnityEngine;
 
 public class PlayerCollisionController : Singleton<PlayerCollisionController>
 {
+    [SerializeField] private GameObject virtualCameraForStage;
+    [SerializeField] private GameObject virtualCameraForPlayer;
+
     public bool isLanded;
     public bool IsLanded => isLanded;
+
+    public PlatformController currentCollidedPlatform;
+
+    private void Awake()
+    {
+        virtualCameraForStage.SetActive(true);
+        virtualCameraForPlayer.SetActive(false);
+    }
 
     private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.enabled)
         {
-            if (col.gameObject.TryGetComponent(out Platform platform))
+            if (col.gameObject.TryGetComponent(out PlatformController platform))
             {
-                if (transform.position.y > platform.transform.position.y)
+                Debug.Log("Collided!!!");
+                
+                var samePlatform = false;
+                if (currentCollidedPlatform == null)
                 {
-                    Debug.Log("Collided!");
-                    isLanded = true;
-                    PlayerDragController.Instance.SetCollidedPlatform(platform);
-                    platform.StartCollisionBehaviors();
+                    currentCollidedPlatform = platform;
+                }
+                else
+                {
+                    if (currentCollidedPlatform == platform)
+                    {
+                        samePlatform = true;
+                    }
+                    else
+                    {
+                        currentCollidedPlatform = platform;
+                    }
+                }
+                
+                isLanded = true;
+                platform.CollisionEnterBehaviour(samePlatform);
+            }
+        }
+    }
 
-                    StartCoroutine(SetPlayerIdleAnimation());
-                    PlayerDragController.Instance.SetCanDrag();
+    private void OnCollisionExit2D(Collision2D col)
+    {
+        if (col.enabled)
+        {
+            if (col.gameObject.TryGetComponent(out PlatformController platform))
+            {
+                //if (transform.position.y > platform.transform.position.y)
+                {
+                    isLanded = false;
+                    platform.CollisionExitBehaviour();
                 }
             }
         }
     }
 
-    public void SetIsLandedFalse()
-    {
-        isLanded = false;
-    }
-    
     private void OnTriggerEnter2D(Collider2D col)
     {
         //if (col.enabled)
         {
-            if (col.gameObject.TryGetComponent(out PlatformLandingTriggerTag platform))
+            if (col.gameObject.TryGetComponent(out PlatformLandingTriggerTag _))
             {
-                if (transform.position.y > platform.transform.position.y)
+                //  if (transform.position.y > platform.transform.position.y)
                 {
+                    Debug.Log("Trigger enter!!!");
+
+                    
                     isLanded = false;
                     PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
                     PlayerAnimationController.Instance.PlayAnimation(AnimationNames.MED_LANDING_ANIMATION_NAME, false);
                 }
             }
-        }
-    }
 
-    private IEnumerator SetPlayerIdleAnimation()
-    {
-        yield return new WaitForSeconds(1f);
-        PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
-        PlayerAnimationController.Instance.PlayAnimation(AnimationNames.IDLE_ANIMATION_NAME, true);
-    }
+            if (col.gameObject.TryGetComponent(out PlatformOutOfEdgeTag _))
+            {
+                isLanded = false;
+                PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
+                //PlayerAnimationController.Instance.PlayAnimation(AnimationNames.LOSING_BALANCE_NAME, false);
+                PlayerWalkController.Instance.SetDelayCauseOfLosingBalance();
+            }
 
-    private void OnCollisionExit2D(Collision2D col)
-    {
-        if (col.gameObject.TryGetComponent(out Platform platform))
-        {
-            platform.StartCollisionOutBehaviors();
+            if (col.gameObject.TryGetComponent(out PlatformCeilingTag _))
+            {
+                if (virtualCameraForStage.activeInHierarchy)
+                {
+                    virtualCameraForStage.SetActive(false);
+                    virtualCameraForPlayer.SetActive(true);
+                }
+                else
+                {
+                    virtualCameraForStage.SetActive(true);
+                    virtualCameraForPlayer.SetActive(false);
+                }
+            }
         }
     }
 }

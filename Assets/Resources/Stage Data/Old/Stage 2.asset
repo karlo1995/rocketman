@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e01fa7760ff0f0a4fb9441c48961f7e9, type: 3}
+  m_Name: Stage 2
+  m_EditorClassIdentifier: 
+  RoomId: 
+  Platforms:
+  - PlatformData:
+    - {fileID: 11400000, guid: aa6d71c7b52501c469be694195d638eb, type: 2}
+  - PlatformData:
+    - {fileID: 11400000, guid: e8bde405bfd6a3446a81d90bd6b2cb43, type: 2}
+  - PlatformData:
+    - {fileID: 11400000, guid: b21e8bb51a93a0f49aa1127c10a378d0, type: 2}
+  - PlatformData:
+    - {fileID: 11400000, guid: 22199678073d9ca44b5ac47d53a15d98, type: 2}
+  - PlatformData:
+    - {fileID: 11400000, guid: bebe39bb8ef86cc45a5c8c43f5117784, type: 2}
+    - {fileID: 11400000, guid: ad44a76826b554e4490802cabe4501a8, type: 2}
+  - PlatformData:
+    - {fileID: 11400000, guid: ad1d4bcd209431d44a5fde98fbdb3752, type: 2}
+  BackgroundSprite: {fileID: 393818702, guid: 3b9f73ca573eecc4784cfb4735d29fa2, type: 3}
+  IsLastStage: 0

@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class PlatformCollisionTag : MonoBehaviour
 {
-    [SerializeField] private Platform platform;
-    public Platform Platform => platform;
+    // [SerializeField] private Platform platform;
+    // public Platform Platform => platform;
 }
