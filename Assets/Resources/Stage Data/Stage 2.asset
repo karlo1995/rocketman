@@ -12,20 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e01fa7760ff0f0a4fb9441c48961f7e9, type: 3}
   m_Name: Stage 2
   m_EditorClassIdentifier: 
-  RoomId: 
   Platforms:
-  - PlatformData:
-    - {fileID: 11400000, guid: aa6d71c7b52501c469be694195d638eb, type: 2}
-  - PlatformData:
-    - {fileID: 11400000, guid: e8bde405bfd6a3446a81d90bd6b2cb43, type: 2}
-  - PlatformData:
-    - {fileID: 11400000, guid: b21e8bb51a93a0f49aa1127c10a378d0, type: 2}
-  - PlatformData:
-    - {fileID: 11400000, guid: 22199678073d9ca44b5ac47d53a15d98, type: 2}
-  - PlatformData:
-    - {fileID: 11400000, guid: bebe39bb8ef86cc45a5c8c43f5117784, type: 2}
-    - {fileID: 11400000, guid: ad44a76826b554e4490802cabe4501a8, type: 2}
-  - PlatformData:
-    - {fileID: 11400000, guid: ad1d4bcd209431d44a5fde98fbdb3752, type: 2}
-  BackgroundSprite: {fileID: 393818702, guid: 3b9f73ca573eecc4784cfb4735d29fa2, type: 3}
+  - PlatformName: 
+    PlatformData:
+    - PlatformId: opening_stage1
+      PlatformPosition: {x: -14.24, y: -8.42}
+    - PlatformId: short_stage1
+      PlatformPosition: {x: -9.1, y: -7.59}
+    CameraPosition: {x: -15.96, y: -8.89}
+    CeilingPosition: {x: -10.96, y: -2.33}
+  - PlatformName: 
+    PlatformData:
+    - PlatformId: short_stage1
+      PlatformPosition: {x: -6.1, y: -7.59}
+    - PlatformId: short_stage1
+      PlatformPosition: {x: -2.1, y: -5.59}
+    - PlatformId: short_stage1
+      PlatformPosition: {x: 2.94, y: -7.27}
+    CameraPosition: {x: -0.33, y: -7.44}
+    CeilingPosition: {x: 0, y: 0}
+  PlatformPrefab:
+  - PlatformId: opening_stage1
+    PlatformObject: {fileID: 8907011088348564515, guid: fffcb1e311466a548bcbf181d64662a9, type: 3}
+  - PlatformId: short_stage1
+    PlatformObject: {fileID: 941035725850501142, guid: c8494d2e12cd05141802dca8ed410d35, type: 3}
   IsLastStage: 0
+  IsNextStageBoss: 1

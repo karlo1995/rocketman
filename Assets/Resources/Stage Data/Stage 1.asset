@@ -13,28 +13,28 @@ MonoBehaviour:
   m_Name: Stage 1
   m_EditorClassIdentifier: 
   Platforms:
-  - PlatformData:
+  - PlatformName: 
+    PlatformData:
     - PlatformId: opening_stage1
       PlatformPosition: {x: -14.24, y: -8.42}
     - PlatformId: short_stage1
       PlatformPosition: {x: -9.1, y: -7.59}
     CameraPosition: {x: -15.96, y: -8.89}
-  - PlatformData:
+    CeilingPosition: {x: -10.96, y: -2.33}
+  - PlatformName: 
+    PlatformData:
     - PlatformId: short_stage1
-      PlatformPosition: {x: -4.73, y: -6.77}
+      PlatformPosition: {x: -6.1, y: -7.59}
     - PlatformId: short_stage1
-      PlatformPosition: {x: 0, y: -5}
+      PlatformPosition: {x: -2.1, y: -5.59}
     - PlatformId: short_stage1
-      PlatformPosition: {x: 4.63, y: -6.68}
-    - PlatformId: short_stage1
-      PlatformPosition: {x: -3.97, y: -4.4}
-    CameraPosition: {x: -0.33, y: -6.01}
-  - PlatformData: []
-    CameraPosition: {x: 0, y: 0}
+      PlatformPosition: {x: 2.94, y: -7.27}
+    CameraPosition: {x: -0.33, y: -7.44}
+    CeilingPosition: {x: 0, y: 0}
   PlatformPrefab:
   - PlatformId: opening_stage1
     PlatformObject: {fileID: 8907011088348564515, guid: fffcb1e311466a548bcbf181d64662a9, type: 3}
   - PlatformId: short_stage1
-    PlatformObject: {fileID: 1934180242689123269, guid: c8494d2e12cd05141802dca8ed410d35, type: 3}
+    PlatformObject: {fileID: 941035725850501142, guid: c8494d2e12cd05141802dca8ed410d35, type: 3}
   IsLastStage: 0
   IsNextStageBoss: 1

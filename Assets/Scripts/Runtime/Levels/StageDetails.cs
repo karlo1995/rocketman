@@ -17,8 +17,10 @@ namespace Runtime.Levels
     public class Platforms
     {
         [Title("LEVEL PLATFORM", horizontalLine: true, bold: true)]
+        public string PlatformName;
         public PlatformData[] PlatformData;
         public Vector2 CameraPosition;
+        public Vector2 CeilingPosition;
     }
 
     [System.Serializable]
@@ -27,12 +29,11 @@ namespace Runtime.Levels
         public string PlatformId;
         public GameObject PlatformObject;
     }
-    
+
     [System.Serializable]
     public class PlatformData
     {
         public string PlatformId;
         public Vector2 PlatformPosition;
-
     }
 }

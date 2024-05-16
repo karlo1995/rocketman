@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cinemachine;
 using DG.Tweening;
 using Runtime.Levels;
+using Runtime.Levels.Platform_Scripts;
 using Runtime.Manager;
 using Runtime.Map_Controller;
 using Script.Misc;
@@ -16,23 +17,29 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] private int platformPoolBaseAmount;
     [SerializeField] private CinemachineVirtualCamera cmVirtualCamera;
 
+    [SerializeField] private GameObject playerController;
+    [SerializeField] private Rigidbody2D playerControllerRigidBody;
+    [SerializeField] private GameObject ceilingPrefab;
+
     [ShowInInspector] private Platforms[] stagePlatforms;
     [ShowInInspector] private StageDetails currentStageDetails;
-    [ShowInInspector] private Dictionary<int, List<Platform>> spawnedPlatforms = new();
+    [ShowInInspector] private Dictionary<int, List<PlatformController>> spawnedPlatforms = new();
 
-    private int levelIndex;
+    private int currentLevelIndex;
     private int platformIndex;
     private Vector2 pastPos;
     private bool resetLevel;
 
-    private Platform spawnPointPlatform;
-    [ShowInInspector] private readonly Dictionary<string, List<Platform>> platformPrefabPool = new();
+    private PlatformController spawnPointPlatform;
+    [ShowInInspector] private readonly Dictionary<string, List<PlatformController>> platformPrefabPool = new();
 
-    public int spawnedPlatformCount;
-    public int levelCount;
+    [ShowInInspector] private int spawnedPlatformCount;
+    [ShowInInspector] private int levelCount;
 
     public List<Transform> cameraPositions = new();
-    public Platform platformToRemove;
+    public List<Transform> ceilingPositions = new();
+
+    public PlatformController platformToRemove;
 
     private void Start()
     {
@@ -46,7 +53,7 @@ public class LevelManager : Singleton<LevelManager>
             for (var i = 0; i < platformPoolBaseAmount; i++)
             {
                 var instantiatedPlatform = Instantiate(prefabToInstantiate.PlatformObject, transform);
-                var platformComponent = instantiatedPlatform.GetComponent<Platform>();
+                var platformComponent = instantiatedPlatform.GetComponent<PlatformController>();
 
                 if (platformPrefabPool.ContainsKey(prefabToInstantiate.PlatformId))
                 {
@@ -54,7 +61,7 @@ public class LevelManager : Singleton<LevelManager>
                 }
                 else
                 {
-                    platformPrefabPool.Add(prefabToInstantiate.PlatformId, new List<Platform> { platformComponent });
+                    platformPrefabPool.Add(prefabToInstantiate.PlatformId, new List<PlatformController> { platformComponent });
                 }
 
                 instantiatedPlatform.gameObject.SetActive(false);
@@ -62,7 +69,7 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
-    private Platform GetPlatform(PlatformData platformDetails)
+    private PlatformController GetPlatform(PlatformData platformDetails)
     {
         if (platformPrefabPool.ContainsKey(platformDetails.PlatformId))
         {
@@ -89,8 +96,8 @@ public class LevelManager : Singleton<LevelManager>
 
             //if there are no available platform, create a new one then return
             var newPlatform = Instantiate(platformPrefabPool[platformDetails.PlatformId][0], transform);
-            platformPrefabPool[platformDetails.PlatformId].Add(newPlatform.GetComponent<Platform>());
-            return newPlatform.GetComponent<Platform>();
+            platformPrefabPool[platformDetails.PlatformId].Add(newPlatform.GetComponent<PlatformController>());
+            return newPlatform.GetComponent<PlatformController>();
         }
 
         //if the platform is not instantiated at start, check your scriptable platform details
@@ -132,10 +139,49 @@ public class LevelManager : Singleton<LevelManager>
         }
 
         platformIndex = 0;
-        levelIndex = 0;
+        currentLevelIndex = 0;
 
         SpawnCameraPositions();
+        SpawnCeilingPositions();
+
+        //spawn the first 2 platform
         SpawnPlatforms();
+        SpawnPlatforms();
+
+        StartCoroutine(SpawnPlayer());
+    }
+
+    private IEnumerator SpawnPlayer()
+    {
+        yield return new WaitForSeconds(2f);
+
+        playerController.SetActive(true);
+        playerControllerRigidBody.isKinematic = true;
+
+        var platforms = GetCurrentSpawnedPlatform();
+        var spawnPosition = platforms[0].SpawnPosition;
+        var launchPosition = platforms[0].LaunchPosition;
+
+        PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
+        PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
+
+        //move the player controller in the spawn point platform
+        playerController.transform.DOMove(launchPosition.position, 0f).OnComplete(() =>
+        {
+            playerController.transform.DOMove(spawnPosition.position, 1f).OnComplete(() =>
+            {
+                PlayerAnimationController.Instance.PlayAnimation(AnimationNames.BRAKE_ANIMATION_NAME, false);
+                PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
+
+                StartCoroutine(FallAnimationPlayer());
+            });
+        });
+    }
+
+    private IEnumerator FallAnimationPlayer()
+    {
+        yield return new WaitForSeconds(0.5f);
+        playerControllerRigidBody.isKinematic = false;
     }
 
     private IEnumerator RemovePlatform(int level, int secondsDelay)
@@ -150,27 +196,6 @@ public class LevelManager : Singleton<LevelManager>
 
             spawnedPlatforms.Remove(level - 1);
         }
-        else if (spawnedPlatforms.ContainsKey(level))
-        {
-            if (platformToRemove != null)
-            {
-                // platformToRemove.gameObject.SetActive(false);
-            }
-
-            //     if (spawnedPlatforms.Count > 0)
-            //     {
-            //         var count = spawnedPlatforms[level].Count;
-            //         spawnedPlatforms[level][count - 1].gameObject.SetActive(false);
-            //     }
-            //     else
-            //     {
-            //       
-            //         // if (Vector2.Distance(PlayerCollisionController.Instance.transform, spawnedPlatforms[0][0]) > 1f)
-            //         // {
-            //         //     
-            //         // }
-        }
-        // }
     }
 
     private void SpawnCameraPositions()
@@ -187,8 +212,23 @@ public class LevelManager : Singleton<LevelManager>
 
             cameraTransform.transform.DOLocalMove(platforms.CameraPosition, 0f);
             cameraTransform.gameObject.SetActive(false);
+            cameraTransform.name = "Camera Position " + platforms.PlatformName;
 
             cameraPositions.Add(cameraTransform.transform);
+        }
+    }
+
+    private void SpawnCeilingPositions()
+    {
+        foreach (var platforms in currentStageDetails.Platforms)
+        {
+            var ceilingPosition = Instantiate(ceilingPrefab);
+            ceilingPosition.transform.parent = transform;
+            ceilingPosition.transform.DOLocalMove(platforms.CeilingPosition, 0f);
+            ceilingPosition.gameObject.SetActive(false);
+            ceilingPosition.name = "Ceiling Position " + platforms.PlatformName;
+
+            ceilingPositions.Add(ceilingPosition.transform);
         }
     }
 
@@ -231,7 +271,7 @@ public class LevelManager : Singleton<LevelManager>
                         }
                         else
                         {
-                            spawnedPlatforms.Add(levelCount, new List<Platform> { platform });
+                            spawnedPlatforms.Add(levelCount, new List<PlatformController> { platform });
                         }
                     }
 
@@ -286,7 +326,7 @@ public class LevelManager : Singleton<LevelManager>
         });
     }
 
-    private List<Platform> GetCurrentSpawnedPlatform()
+    private List<PlatformController> GetCurrentSpawnedPlatform()
     {
         var levelCountToSpawn = 0;
         if (spawnedPlatforms.ContainsKey(levelCount))
@@ -322,7 +362,9 @@ public class LevelManager : Singleton<LevelManager>
                 }
             }
 
-            cmVirtualCamera.Follow = cameraPositions[levelCountToSpawn]; // GetCurrentSpawnedPlatform()[0].CameraPosition;
+            cmVirtualCamera.Follow = cameraPositions[levelCountToSpawn];
+            //ceilingPositions[levelCountToSpawn - 1].gameObject.SetActive(false);
+            ceilingPositions[levelCountToSpawn].gameObject.SetActive(true); // GetCurrentSpawnedPlatform()[0].CameraPosition;
             Invoke(nameof(UpdateGameSettings), 1f);
         }
     }
@@ -333,13 +375,13 @@ public class LevelManager : Singleton<LevelManager>
         // PlayerDragController.Instance.SetCanDrag();
     }
 
-    public void SetPlatformToRemove(Platform platform)
+    public void SetPlatformToRemove(PlatformController platform)
     {
         platformToRemove = platform;
     }
 
 
-    public void SpawnNextPlatform(int levelPlatform, Platform platform)
+    public void SpawnNextPlatform(int levelPlatform)
     {
         //Invoke(nameof(TurnOnRadar), 2f);
 
@@ -372,7 +414,7 @@ public class LevelManager : Singleton<LevelManager>
             {
                 //remove first the multiple spawned platforms
                 //retain only the first 2 platforms of that level
-                var platformsToRemove = new List<Platform>();
+                var platformsToRemove = new List<PlatformController>();
                 for (var i = 2; i < spawnedPlatforms[levelCount].Count; i++)
                 {
                     var platform = spawnedPlatforms[levelCount][i];
@@ -407,7 +449,7 @@ public class LevelManager : Singleton<LevelManager>
         {
             //remove the multiple spawned platforms
             //retain only the first 2 platforms of that level'
-            var platformsToRemove = new List<Platform>();
+            var platformsToRemove = new List<PlatformController>();
             for (var i = 2; i < spawnedPlatforms[levelCount].Count; i++)
             {
                 var platform = spawnedPlatforms[levelCount][i];
@@ -424,7 +466,6 @@ public class LevelManager : Singleton<LevelManager>
 
     public async Task ResetLevel()
     {
-        //Invoke(nameof(TurnOnRadar), 2f);
         platformToRemove = null;
 
         //remove the spawned platforms for the next level
@@ -432,27 +473,33 @@ public class LevelManager : Singleton<LevelManager>
         await AbortPlatformsOnAdvanceLevels();
         await AbortAdvancePlatformsOnTheSameLevel();
 
+        playerControllerRigidBody.isKinematic = true;
+
         var platforms = GetCurrentSpawnedPlatform();
-        var spawnPosition = platforms[0].GetSpawnPosition();
-        var launchPosition = platforms[0].GetLaunchPosition();
+        var spawnPosition = platforms[0].SpawnPosition;
+        var launchPosition = platforms[0].LaunchPosition;
+
+        PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
+        PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
 
         //move the player controller in the spawn point platform
-        PlayerDeathController.Instance.transform.DOMove(launchPosition, 0f).OnComplete(() =>
+        playerController.transform.DOMove(launchPosition.position, 0f).OnComplete(() =>
         {
-            PlayerDeathController.Instance.transform.DOMove(spawnPosition, 0.5f).OnComplete(() =>
+            playerController.transform.DOMove(spawnPosition.position, 1f).OnComplete(() =>
             {
-                spawnedPlatformCount = 1;
+                spawnedPlatformCount = 2;
 
                 for (var i = 0; i < platforms.Count; i++)
                 {
                     //reset all the collision of the platforms on the same level
-                    platforms[i].TurnOnCollision();
-
                     //make sure to set active true only the first 2 platform in the level
                     platforms[i].gameObject.SetActive(i < 2);
                 }
 
-                PlayerDeathController.Instance.ResetDropStatus();
+                PlayerAnimationController.Instance.PlayAnimation(AnimationNames.BRAKE_ANIMATION_NAME, false);
+                PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
+
+                StartCoroutine(FallAnimationPlayer());
             });
         });
     }

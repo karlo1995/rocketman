@@ -7,6 +7,7 @@ using System;
 using Cinemachine;
 using DG.Tweening;
 using Runtime.Boss_Controllers;
+using Runtime.Levels.Platform_Scripts;
 using Sirenix.OdinInspector;
 
 internal class PlayerController : MonoBehaviour
@@ -255,7 +256,7 @@ internal class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Wall") && _isLaunched) _hitWall = true;
 
-        if (collision.gameObject.TryGetComponent(out Platform platform))
+        if (collision.gameObject.TryGetComponent(out PlatformController platform))
         {
             // Debug.Log("is falling: " + _isFalling);
             // var posy = platform.transform.position.y;

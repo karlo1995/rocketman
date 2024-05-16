@@ -7,7 +7,9 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
     [SerializeField] private int livesCount;
     [SerializeField] private float failThreshold = -11f;
 
-    private bool isDropped;
+    private bool isDropped = true;
+    public bool IsDropped => isDropped;
+    
     private Rigidbody2D rigidbody2D;
 
     private void Awake()
@@ -28,6 +30,7 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
             }
 
             rigidbody2D.velocity = Vector2.zero;
+            PlayerDragController.Instance.SetResetToLandingSpot(true);
             LevelManager.Instance.ResetLevel();
         }
     }
