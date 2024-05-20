@@ -26,7 +26,7 @@ namespace Runtime.Levels
     [System.Serializable]
     public class PlatformPrefab
     {
-        public string PlatformId;
+        public string PrefabId;
         public GameObject PlatformObject;
     }
 
@@ -35,5 +35,13 @@ namespace Runtime.Levels
     {
         public string PlatformId;
         public Vector2 PlatformPosition;
+        public CollectibleData[] CollectibleData;
+    }
+    
+    [System.Serializable]
+    public class CollectibleData
+    {
+        public string CollectibleId;
+        public Vector2 CollectiblePosition;
     }
 }

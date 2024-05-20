@@ -8,7 +8,7 @@ public class FuelController : Singleton<FuelController>
 {
     private const float THRUST_DEDUCTION = 0.05f;
     private const float BRAKE_DEDUCTION = 0.05f;
-    private const float DRAG_DEDUCTION = 0.02f;
+    private const float DRAG_DEDUCTION = 0.029f;
 
     [SerializeField] private Sprite[] fuelSprites;
     [SerializeField] private Image realFuelProgressBar;
@@ -43,6 +43,36 @@ public class FuelController : Singleton<FuelController>
     {
         return fuelAmount > BRAKE_DEDUCTION;
     }
+
+    public void AddFuel(float amount)
+    {
+        var fuelAmountToAdd = amount * 0.01f;
+        
+        fuelAmount += fuelAmountToAdd;
+        if (fuelAmount > 1f)
+        {
+            fuelAmount = 1f;
+        }
+        
+        predictionFuelAmount = fuelAmount;
+        realFuelProgressBar.transform.DOScaleX(fuelAmount, 1f);
+        predictedFuelProgressBar.transform.DOScaleX(fuelAmount, 0f);
+    }
+
+    private void DeductFuel(float amount)
+    {
+        var fuelAmountToAdd = amount * 0.01f;
+        
+        fuelAmount -= fuelAmountToAdd;
+        if (fuelAmount < 0f)
+        {
+            fuelAmount = 0f;
+        }
+        
+        predictionFuelAmount = fuelAmount;
+        realFuelProgressBar.transform.DOScaleX(fuelAmount, 1f);
+        predictedFuelProgressBar.transform.DOScaleX(fuelAmount, 0f);
+    }
     
     public bool IsFuelEnoughToDrag(float dragDistance)
     {
@@ -65,7 +95,7 @@ public class FuelController : Singleton<FuelController>
     {
         if (IsFuelEnoughToBrake())
         {
-            fuelAmount -= BRAKE_DEDUCTION;
+            DeductFuel(BRAKE_DEDUCTION);
             predictionFuelAmount = fuelAmount;
 
             realFuelProgressBar.transform.DOScaleX(fuelAmount, 1f);
@@ -79,7 +109,7 @@ public class FuelController : Singleton<FuelController>
     {
         while (PlayerThrustController.Instance.IsThrusting)
         {
-            fuelAmount -= THRUST_DEDUCTION;
+            DeductFuel(THRUST_DEDUCTION);
             predictionFuelAmount = fuelAmount;
 
             realFuelProgressBar.transform.DOScaleX(fuelAmount, 1f);
@@ -105,6 +135,11 @@ public class FuelController : Singleton<FuelController>
         realFuelProgressBar.DOFade(0f, 0f);
         
         predictionFuelAmount = fuelAmount - dragDistance * DRAG_DEDUCTION;
+        if (predictionFuelAmount < 0f)
+        {
+            predictionFuelAmount = 0f;
+        }
+        
         predictedFuelProgressBar.DOFade(1f, 0f);
         
         adjustingFuelProgressBar.DOFillAmount(predictionFuelAmount, 0.3f);

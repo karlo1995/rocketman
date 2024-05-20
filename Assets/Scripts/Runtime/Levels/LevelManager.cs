@@ -24,6 +24,7 @@ public class LevelManager : Singleton<LevelManager>
     [ShowInInspector] private Platforms[] stagePlatforms;
     [ShowInInspector] private StageDetails currentStageDetails;
     [ShowInInspector] private Dictionary<int, List<PlatformController>> spawnedPlatforms = new();
+    [ShowInInspector] private List<CollectibleData> spawnedCollectibleData = new();
 
     private int currentLevelIndex;
     private int platformIndex;
@@ -31,7 +32,7 @@ public class LevelManager : Singleton<LevelManager>
     private bool resetLevel;
 
     private PlatformController spawnPointPlatform;
-    [ShowInInspector] private readonly Dictionary<string, List<PlatformController>> platformPrefabPool = new();
+    [ShowInInspector] private readonly Dictionary<string, List<GameObject>> prefabPool = new();
 
     [ShowInInspector] private int spawnedPlatformCount;
     [ShowInInspector] private int levelCount;
@@ -46,35 +47,74 @@ public class LevelManager : Singleton<LevelManager>
         SetNewStage();
     }
 
-    private void CreateInitialPlatformPool(PlatformPrefab[] platformPrefabArray)
+    private void CreateStagePrefabs(PlatformPrefab[] platformPrefabArray)
     {
         foreach (var prefabToInstantiate in platformPrefabArray)
         {
             for (var i = 0; i < platformPoolBaseAmount; i++)
             {
                 var instantiatedPlatform = Instantiate(prefabToInstantiate.PlatformObject, transform);
-                var platformComponent = instantiatedPlatform.GetComponent<PlatformController>();
 
-                if (platformPrefabPool.ContainsKey(prefabToInstantiate.PlatformId))
+                if (prefabPool.ContainsKey(prefabToInstantiate.PrefabId))
                 {
-                    platformPrefabPool[prefabToInstantiate.PlatformId].Add(platformComponent);
+                    prefabPool[prefabToInstantiate.PrefabId].Add(instantiatedPlatform);
                 }
                 else
                 {
-                    platformPrefabPool.Add(prefabToInstantiate.PlatformId, new List<PlatformController> { platformComponent });
+                    prefabPool.Add(prefabToInstantiate.PrefabId, new List<GameObject> { instantiatedPlatform });
                 }
 
                 instantiatedPlatform.gameObject.SetActive(false);
             }
         }
     }
+    
+    private void SpawnCollectible(CollectibleData[] collectibleData)
+    {
+        foreach (var collectible in collectibleData)
+        {
+            if (!spawnedCollectibleData.Contains(collectible))
+            {
+                if (prefabPool.ContainsKey(collectible.CollectibleId))
+                {
+                    var spawnedCollectible = false;
+                    foreach (var collectibleObjectPool in prefabPool[collectible.CollectibleId])
+                    {
+                        if (!collectibleObjectPool.activeInHierarchy)
+                        {
+                            spawnedCollectible = true;
+                            
+                            collectibleObjectPool.SetActive(true);
+                            collectibleObjectPool.transform.position = collectible.CollectiblePosition;
+                            
+                            spawnedCollectibleData.Add(collectible);
+                            break;
+                        }
+                    }
+
+                    if (!spawnedCollectible)
+                    {
+                        //if there are no available collectible, create a new one then return
+                        var newCollectible = Instantiate(prefabPool[collectible.CollectibleId][0], transform);
+                        prefabPool[collectible.CollectibleId].Add(newCollectible);
+                        
+                        newCollectible.transform.position = collectible.CollectiblePosition;
+                        newCollectible.gameObject.SetActive(true);
+                        
+                        spawnedCollectibleData.Add(collectible);
+                    }
+                }
+            }
+        }
+    }
 
     private PlatformController GetPlatform(PlatformData platformDetails)
     {
-        if (platformPrefabPool.ContainsKey(platformDetails.PlatformId))
+        if (prefabPool.ContainsKey(platformDetails.PlatformId))
         {
-            foreach (var platform in platformPrefabPool[platformDetails.PlatformId])
+            foreach (var platformObjectPool in prefabPool[platformDetails.PlatformId])
             {
+                var platform = platformObjectPool.GetComponent<PlatformController>();
                 if (spawnedPlatforms.ContainsKey(levelCount))
                 {
                     if (!spawnedPlatforms[levelCount].Contains(platform))
@@ -95,8 +135,8 @@ public class LevelManager : Singleton<LevelManager>
             }
 
             //if there are no available platform, create a new one then return
-            var newPlatform = Instantiate(platformPrefabPool[platformDetails.PlatformId][0], transform);
-            platformPrefabPool[platformDetails.PlatformId].Add(newPlatform.GetComponent<PlatformController>());
+            var newPlatform = Instantiate(prefabPool[platformDetails.PlatformId][0], transform);
+            prefabPool[platformDetails.PlatformId].Add(newPlatform);
             return newPlatform.GetComponent<PlatformController>();
         }
 
@@ -104,7 +144,7 @@ public class LevelManager : Singleton<LevelManager>
         Debug.Log("No Platform found in pool for platform " + platformDetails.PlatformId);
         return null;
     }
-
+    
     private bool IsLastStage()
     {
         return currentStageDetails.IsLastStage;
@@ -124,7 +164,7 @@ public class LevelManager : Singleton<LevelManager>
         //var levelDataName = "Stage Data/Test Stage " + PlayerDataManager.Instance.CurrentStageLevel;
 
         currentStageDetails = Resources.Load<StageDetails>(levelDataName);
-        CreateInitialPlatformPool(currentStageDetails.PlatformPrefab);
+        CreateStagePrefabs(currentStageDetails.PlatformPrefab);
         stagePlatforms = new Platforms[] { };
 
         if (!IsLastStage())
@@ -273,6 +313,12 @@ public class LevelManager : Singleton<LevelManager>
                         {
                             spawnedPlatforms.Add(levelCount, new List<PlatformController> { platform });
                         }
+
+                        //it means there are collectibles need to spawn
+                        if (platformDetails.CollectibleData.Length > 0)
+                        {
+                            SpawnCollectible(platformDetails.CollectibleData);
+                        }
                     }
 
                     //break the while loop, if there is a new platform to spawned, so the camera will pan to that platform
@@ -398,7 +444,6 @@ public class LevelManager : Singleton<LevelManager>
             if (!spawnedPlatforms.ContainsKey(1))
             {
                 //  platformToRemove = platform;
-
                 SpawnPlatforms();
             }
         }
