@@ -72,20 +72,28 @@ public class PlayerDragController : Singleton<PlayerDragController>
         lineRenderer.SetPosition(0, Vector2.zero);
         lineRenderer.SetPosition(1, Vector2.zero);
         lineRenderer.enabled = false;
+        
+        SetResetToLandingSpot(false);
+
+        canDrag = false;
+        isReleased = false;
     }
 
     private void Update()
     {
-        if (canDrag)
+        if (!DisplayDialogue.Instance.IsOpen)
         {
-            if (Input.GetMouseButtonDown(0) && !isDragging)
+            if (canDrag)
             {
-                DragStart();
-            }
+                if (Input.GetMouseButtonDown(0) && !isDragging)
+                {
+                    DragStart();
+                }
 
-            if (isDragging)
-            {
-                Drag();
+                if (isDragging)
+                {
+                    Drag();
+                }
             }
         }
     }
@@ -204,8 +212,6 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     private void PlayThruster()
     {
-        Debug.Log("Magnitude: " + finalForce.magnitude);
-
         if (finalForce.magnitude > 2f)
         {
             PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);

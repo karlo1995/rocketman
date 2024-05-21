@@ -18,6 +18,8 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] private CinemachineVirtualCamera cmVirtualCamera;
 
     [SerializeField] private GameObject playerController;
+    [SerializeField] private GameObject playerDragController;
+
     [SerializeField] private Rigidbody2D playerControllerRigidBody;
     [SerializeField] private GameObject ceilingPrefab;
 
@@ -218,6 +220,10 @@ public class LevelManager : Singleton<LevelManager>
                 PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
 
                 StartCoroutine(FallAnimationPlayer());
+                
+                //play initial dialogue
+                playerDragController.SetActive(true);
+                DisplayDialogue.Instance.Open();
             });
         });
     }
