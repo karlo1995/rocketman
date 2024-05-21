@@ -92,7 +92,7 @@ namespace Runtime.Levels.Platform_Scripts
             var distance = Vector2.Distance(midLandingPosition.position, PlayerWalkController.Instance.PivotPoint.position);
             if (distance > 0.3f)
             {
-                PlayerWalkController.Instance.MoveTowardMid(midLandingWalkingPosition, SpawnNextPlatform);
+                PlayerWalkController.Instance.MoveTowardMid(midLandingWalkingPosition, distance, SpawnNextPlatform);
                 return true;
             }
 

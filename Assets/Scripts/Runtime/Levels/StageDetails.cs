@@ -21,12 +21,42 @@ namespace Runtime.Levels
         public PlatformData[] PlatformData;
         public Vector2 CameraPosition;
         public Vector2 CeilingPosition;
+
+        public float GetRightmostPlatformDataPosition()
+        {
+            var farthestXDistance = Mathf.NegativeInfinity;
+            
+            foreach (var data in PlatformData)
+            {
+                if (data.PlatformPosition.x > farthestXDistance)
+                {
+                    farthestXDistance = data.PlatformPosition.x;
+                }
+            }
+
+            return farthestXDistance + 5f;
+        }
+        
+        public float GetLeftmostPlatformDataPosition()
+        {
+            var farthestXDistance = Mathf.Infinity;
+            
+            foreach (var data in PlatformData)
+            {
+                if (data.PlatformPosition.x < farthestXDistance)
+                {
+                    farthestXDistance = data.PlatformPosition.x;
+                }
+            }
+
+            return farthestXDistance - 5f;
+        }
     }
 
     [System.Serializable]
     public class PlatformPrefab
     {
-        public string PlatformId;
+        public string PrefabId;
         public GameObject PlatformObject;
     }
 
@@ -35,5 +65,13 @@ namespace Runtime.Levels
     {
         public string PlatformId;
         public Vector2 PlatformPosition;
+        public CollectibleData[] CollectibleData;
+    }
+    
+    [System.Serializable]
+    public class CollectibleData
+    {
+        public string CollectibleId;
+        public Vector2 CollectiblePosition;
     }
 }

@@ -6,11 +6,12 @@ using UnityEngine;
 
 public class PlayerDragController : Singleton<PlayerDragController>
 {
+    [SerializeField] private BoxCollider2D boxCollider2D;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Rigidbody2D rigidbody2D;
     [SerializeField] private float dragLimit = 1f;
     [SerializeField] private float hideDragLimit = 0.3f;
-    [SerializeField] private float forceToAdd = 10f;
+    [SerializeField] private float forceToAdd = 15f;
 
     [SerializeField] private DragVisualController dragVisualController;
 
@@ -121,7 +122,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
         lineRenderer.enabled = true;
         isDragging = true;
 
-        lineRenderer.SetPosition(DragStyleController.Instance.IsAngryBirdController ? 1 : 0, mousePosition);
+        lineRenderer.SetPosition(1, mousePosition);
         dragVisualController.SetActiveRadar(true);
     }
 
@@ -133,11 +134,10 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     private void Drag()
     {
-        var startPos = lineRenderer.GetPosition(DragStyleController.Instance.IsAngryBirdController ? 1 : 0);
+        var startPos = lineRenderer.GetPosition(1);
         var currentPos = mousePosition;
 
         var distance = currentPos - startPos;
-        Debug.Log("magnitude: " + distance.magnitude);
         if (distance.magnitude <= hideDragLimit)
         {
             var limitVector = startPos + distance.normalized * hideDragLimit;
@@ -187,7 +187,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
         var currentPos = lineRenderer.GetPosition(1);
         var distance = currentPos - startPos;
         finalForce = distance * forceToAdd;
-
+        
         if (distance.magnitude >= 2.5f)
         {
             Invoke(nameof(PlayThruster), 0.5f);
@@ -204,8 +204,14 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     private void PlayThruster()
     {
-        PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
-        PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
+        Debug.Log("Magnitude: " + finalForce.magnitude);
+
+        if (finalForce.magnitude > 2f)
+        {
+            PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
+            PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
+        }
+        
 
         rigidbody2D.AddForce(-finalForce, ForceMode2D.Impulse);
         isReleased = true;

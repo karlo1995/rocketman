@@ -84,7 +84,7 @@ public class OldPlatform : MonoBehaviour
         var distanceX = Vector2.Distance(midLandingPosition.position, PlayerWalkController.Instance.transform.position);
         if (distanceX > 1f)
         {
-            PlayerWalkController.Instance.MoveTowardMid(midLandingWalkingPosition, SpawnNextPlatform);
+            PlayerWalkController.Instance.MoveTowardMid(midLandingWalkingPosition, distanceX, SpawnNextPlatform);
             return true;
         }
 
