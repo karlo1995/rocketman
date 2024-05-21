@@ -23,6 +23,7 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
 
     public void PlayAnimation(string animationName, bool isLoop)
     {
+        animationName = "Main_Animations/" + animationName;
         if (spineSkeleton.AnimationName != animationName)
         {
             spineSkeleton.loop = isLoop;

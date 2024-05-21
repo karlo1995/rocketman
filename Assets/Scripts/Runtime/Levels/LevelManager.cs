@@ -18,6 +18,8 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] private CinemachineVirtualCamera cmVirtualCamera;
 
     [SerializeField] private GameObject playerController;
+    [SerializeField] private GameObject playerDragController;
+
     [SerializeField] private Rigidbody2D playerControllerRigidBody;
     [SerializeField] private GameObject ceilingPrefab;
 
@@ -218,6 +220,10 @@ public class LevelManager : Singleton<LevelManager>
                 PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
 
                 StartCoroutine(FallAnimationPlayer());
+                
+                //play initial dialogue
+                playerDragController.SetActive(true);
+                DisplayDialogue.Instance.Open();
             });
         });
     }
@@ -443,7 +449,7 @@ public class LevelManager : Singleton<LevelManager>
             if (levelPlatform.Equals(levelCount))
             {
                 // platformToRemove = platform;
-                PlayerCollisionController.Instance.ResetCamera();
+                PlayerTriggerCollisionController.Instance.ResetCamera();
                 SpawnPlatforms();
             }
         }
@@ -452,7 +458,7 @@ public class LevelManager : Singleton<LevelManager>
             if (!spawnedPlatforms.ContainsKey(1))
             {
                 //  platformToRemove = platform;
-                PlayerCollisionController.Instance.ResetCamera();
+                PlayerTriggerCollisionController.Instance.ResetCamera();
                 SpawnPlatforms();
             }
         }

@@ -34,14 +34,17 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
     private IEnumerator MoveTowardMiddleCoroutine(float distance)
     {
         yield return new WaitForSeconds(distance);
-        
-        PlayerAnimationController.Instance.FlipX(transform.position - midPosition.transform.position);
-        PlayerAnimationController.Instance.PlayAnimation(AnimationNames.WALK_ANIMATION_NAME, true);
-        transform.DOMoveX(midPosition.position.x, 0.5f).OnComplete(() =>
+        if (midPosition != null)
         {
-            doneWalkingCallback?.Invoke();
-            doneWalkingCallback = null;
-        });
+            PlayerAnimationController.Instance.FlipX(transform.position - midPosition.transform.position);
+            PlayerAnimationController.Instance.PlayAnimation(AnimationNames.WALK_ANIMATION_NAME, true);
+            transform.DOMoveX(midPosition.position.x, 0.5f).OnComplete(() =>
+            {
+                doneWalkingCallback?.Invoke();
+                doneWalkingCallback = null;
+                midPosition = null;
+            });
+        }
     }
 
     private IEnumerator LosingBalanceCoroutine(float distance)
@@ -50,13 +53,16 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
         {
             yield return new WaitForSeconds(0.1f);
 
-            PlayerAnimationController.Instance.FlipX(midPosition.transform.position - transform.position);
-            PlayerAnimationController.Instance.PlayAnimation(AnimationNames.LOSING_BALANCE_NAME, false);
+            if (midPosition != null)
+            {
+                PlayerAnimationController.Instance.FlipX(midPosition.transform.position - transform.position);
+                PlayerAnimationController.Instance.PlayAnimation(AnimationNames.LOSING_BALANCE_NAME, false);
 
-            yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.2f);
 
-            StartCoroutine(MoveTowardMiddleCoroutine(distance));
-            isLosingBalance = false;
+                StartCoroutine(MoveTowardMiddleCoroutine(distance));
+                isLosingBalance = false;
+            }
         }
     }
 }
