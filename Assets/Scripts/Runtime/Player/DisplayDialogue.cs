@@ -1,18 +1,21 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Spine.Unity;
-using Script.Misc;
+using TMPro;
 
-public class DisplayDialogue : Singleton<DisplayDialogue>
+public class DisplayDialogue : MonoBehaviour
 {
     [SerializeField] private DialogueItemDetails dialogueItemDetails;
-    [SerializeField] private Text dialogueTxt;
+    [SerializeField] private TMP_Text dialogueTxt;
     [SerializeField] private SkeletonAnimation zoeExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation ethanExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation leoExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation avaExpresionSpineAnimation;
+    [SerializeField] private SkeletonAnimation double_zoeExpresionSpineAnimation;
+    [SerializeField] private SkeletonAnimation double_ethanExpresionSpineAnimation;
+    [SerializeField] private SkeletonAnimation double_leoExpresionSpineAnimation;
+    [SerializeField] private SkeletonAnimation double_avaExpresionSpineAnimation;
     public GameObject dialogueContainer;
     private int dialogueIncrement = 0; // can be public parameter in the future
 
@@ -20,47 +23,55 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
 
     void Awake()
     {
-        InitializeCharacterAnimations(); // the string character inside will replace in a future parameter
+        InitializeCharacterAnimations();
     }
 
     void Start()
     {
-        DisplayDialogueById("stage_1_scene_1");
+        DisplayDialogueById("1");
+    }
+
+    private void InitializeCharacterAnimations()
+    {
+        characterAnimations = new Dictionary<SpineAnimationCharacters, SkeletonAnimation>
+        {
+            { SpineAnimationCharacters.Zoe, zoeExpresionSpineAnimation },
+            { SpineAnimationCharacters.Ethan, ethanExpresionSpineAnimation },
+            { SpineAnimationCharacters.Leo, leoExpresionSpineAnimation },
+            { SpineAnimationCharacters.Ava, avaExpresionSpineAnimation },
+            { SpineAnimationCharacters.Double_Zoe, double_zoeExpresionSpineAnimation },
+            { SpineAnimationCharacters.Double_Ethan, double_ethanExpresionSpineAnimation },
+            { SpineAnimationCharacters.Double_Leo, double_leoExpresionSpineAnimation },
+            { SpineAnimationCharacters.Double_Ava, double_avaExpresionSpineAnimation }
+        };
     }
 
     public void DisplayDialogueById(string p_id)
     {
-        dialogueContainer.SetActive(true);
         DialogueItem dialogueItem = dialogueItemDetails.GetDialogueItemById(p_id);
 
         if (dialogueItem != null)
         {
-            if (dialogueIncrement >= 0 && dialogueIncrement < dialogueItem.Dialogue.Count)
+            if (dialogueIncrement >= 0 && dialogueIncrement < dialogueItem.DialogueHolders.Count)
             {
-                dialogueTxt.text = dialogueItem.Dialogue[dialogueIncrement];
-                
-                if (dialogueIncrement < dialogueItem.SpineAnimationNames.Count && dialogueIncrement < dialogueItem.SpineAnimationCharacters.Count)
+                DialogueHolder dialogueHolder = dialogueItem.DialogueHolders[dialogueIncrement];
+                dialogueTxt.text = dialogueHolder.DialogueText;
+
+                foreach (var character in characterAnimations.Values)
                 {
-                    var characterName = dialogueItem.SpineAnimationCharacters[dialogueIncrement];
-                    string animationName = dialogueItem.SpineAnimationNames[dialogueIncrement];
+                    character.gameObject.SetActive(false);
+                }
 
-                    Debug.Log($"Displaying dialogue for character: {characterName}, animation: {animationName}");
-
-                    foreach (var character in characterAnimations.Keys)
-                    {
-                        characterAnimations[character].gameObject.SetActive(false);
-                    }
-
-                    if (characterAnimations.TryGetValue(characterName, out var skeletonAnimation))
+                foreach (var characterAnimation in dialogueHolder.CharacterAnimations)
+                {
+                    if (characterAnimations.TryGetValue(characterAnimation.Character, out var skeletonAnimation))
                     {
                         skeletonAnimation.gameObject.SetActive(true);
-                        PlayAnimation(skeletonAnimation, "Facial_Expressions/" + animationName, true);
+                        PlayAnimation(skeletonAnimation, "Facial_Expressions/" + characterAnimation.SpineAnimationName, true);
                     }
                     else
                     {
-                        skeletonAnimation.gameObject.SetActive(true);
-                        PlayAnimation(skeletonAnimation, "Facial_Expressions/", true);
-                        //Debug.LogWarning($"No SkeletonAnimation found for character: {characterName}");
+                        Debug.LogWarning($"No SkeletonAnimation found for character: {characterAnimation.Character}");
                     }
                 }
             }
@@ -71,38 +82,28 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
                 dialogueIncrement = 0;
             }
         }
-       
+        else
+        {
+            Debug.LogWarning($"No dialogue item found for ID: {p_id}");
+        }
     }
 
     public void PlayAnimation(SkeletonAnimation skeletonAnimation, string animationName, bool isLoop)
     {
-        if (skeletonAnimation.Skeleton.Data.FindAnimation(animationName) != null)
+        var animation = skeletonAnimation.Skeleton.Data.FindAnimation(animationName);
+        if (animation != null)
         {
-            if (skeletonAnimation.AnimationState.GetCurrent(0) == null || skeletonAnimation.AnimationState.GetCurrent(0).Animation.Name != animationName)
-            {
-                skeletonAnimation.state.SetAnimation(0, animationName, isLoop);
-            }
+            skeletonAnimation.state.SetAnimation(0, animationName, isLoop);
         }
         else
         {
-            Debug.Log($"Animation not found: {animationName}");
+            Debug.LogWarning($"Animation not found: {animationName}");
         }
-    }
-
-    private void InitializeCharacterAnimations()
-    {
-        characterAnimations = new Dictionary<SpineAnimationCharacters, SkeletonAnimation>
-        {
-            { SpineAnimationCharacters.Zoe, zoeExpresionSpineAnimation },
-            { SpineAnimationCharacters.Ethan, ethanExpresionSpineAnimation },
-            { SpineAnimationCharacters.Leo, leoExpresionSpineAnimation },
-            { SpineAnimationCharacters.Ava, avaExpresionSpineAnimation }
-        };
     }
 
     public void NextDialogueBtn()
     {
         dialogueIncrement++;
-        DisplayDialogueById("stage_1_scene_1"); // the string character inside will replace in a future parameter
+        DisplayDialogueById("1"); // the string character inside will replace in a future parameter
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Spine.Unity;
 
 [CreateAssetMenu(menuName = "Dialogue")]
 public class DialogueItemDetails : ScriptableObject
@@ -21,17 +20,29 @@ public class DialogueItemDetails : ScriptableObject
     }
 }
 
+
 [System.Serializable]
 public class DialogueItem
 {
     public string DialogueId;
-    public List<SpineAnimationCharacters> SpineAnimationCharacters = new(); // Character names "zoe, dr leo, dr ava, zoe"
-    public List<string> SpineAnimationNames = new(); // Animation names "Facial_Expressions 
-    [TextArea(4, 10)] public List<string> Dialogue = new();
+    public List<DialogueHolder> DialogueHolders = new();
+}
+
+[System.Serializable]
+public class DialogueHolder
+{
+    [TextArea(4, 10)] public string DialogueText;
+    public List<CharacterAnimationPair> CharacterAnimations = new();
+}
+
+[System.Serializable]
+public class CharacterAnimationPair
+{
+    public SpineAnimationCharacters Character;
+    public string SpineAnimationName;
 }
 
 public enum SpineAnimationCharacters
 {
-    Zoe, Leo, Ava, Ethan
+    Zoe, Leo, Ava, Ethan, Double_Zoe, Double_Leo, Double_Ava, Double_Ethan
 }
-

@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89decc355f187c94ebfd43c147afd338, type: 3}
+  m_Name: dialogue original
+  m_EditorClassIdentifier: 
+  DialogueItems:
+  - DialogueId: stage_1_scene_1
+    SpineAnimationCharacters: 03000000020000000200000000000000
+    SpineAnimationNames:
+    - Relieved
+    - default
+    - default
+    - Concentrating_Focused
+    Dialogue:
+    - 'Ethan: That felt like it took forever! I''m glad we''ve finally landed again.'
+    - "Ava: Considering that something has been interfering with our sensors, I'm
+      glad we went so slowly. <Pause as portrait switches to \xABgrimacing\xBB before
+      the rest of the text appears>\u202FIt beats a crash landing any day.cha"
+    - 'Ava: Zoe, have you managed to isolate the interference and adjust for it?
+      This is more your area of expertise than mine. '
+    - 'Zoe: I''m trying, Ava, but it''s tricky. The frequency of the interference
+      keeps shifting around. '
+  - DialogueId: stage_1_scene_2
+    SpineAnimationCharacters: 000000000300000001000000030000000300000000000000010000000300000000000000
+    SpineAnimationNames:
+    - Triumph
+    - default
+    - default
+    - Confused
+    - default
+    - Thinking_Thoughtful
+    - default
+    - Neutral
+    - Thinking_Thoughtful
+    Dialogue:
+    - "Zoe:\u202FYes! Interference is isolated, and shifting frequency is compensated
+      for. I'm sending you the data now. "
+    - "Ava:\u202FThanks, I'll get our sensors back in working order in a jiffy. "
+    - "Leo:\u202FWoah\u2026 what's that up there? "
+    - "Ethan:\u202FLight? Down here? How is that even possible? "
+    - "3ch3l0n:Hmm\u2026 It would appear that something is generating electromagnetic
+      waves with a frequency equal to what humans call visible light. "
+    - "Zoe:\u202FLet's check it out! "
+    - 'Leo: Our main goal is to determine where the extra oxygen comes from, not
+      investigate mysterious light sources. '
+    - 'Ethan:Uh, Leo, now that my scanners are working again, they seem to indicate
+      that the oxygen is probably coming from the same place as that light. '
+    - "Zoe: So\u2026 how do we get up there? "
+  - DialogueId: stage_1_scene_3
+    SpineAnimationCharacters: 0300000000000000020000000000000003000000020000000200000003000000020000000100000001000000
+    SpineAnimationNames:
+    - Surprised_with_Sensor
+    - Embarrassed_Blushing
+    - 
+    - Uncertain
+    - Neutral
+    - 
+    - 
+    - Blank_Oblivious
+    - 
+    - 
+    - 
+    Dialogue:
+    - 'Ethan:Woah! Unlike the atmosphere outside, the oxygen levels and atmospheric
+      pressure here are high enough that we can survive without our helmets. '
+    - 'Zoe: You mean we can take these off?! [Reaches for helmet and starts to remove
+      it]'
+    - "Ava & Leo: Wait\u2013! "
+    - "Zoe: [Pulls helmet off and sniffs the air] Huh, the air doesn't smell stagnant,
+      which one might expect. It certainly isn't musty, as that would require a lot
+      of moisture. Maybe it's slightly\u2026 earthy? "
+    - 'Ethan: [Pulls off his own helmet and sniffs the air] Huh, you''re right. Though
+      maybe it''d be better to say it smells Marsy? In any case, I can smell a mineral-like
+      tang in the air. '
+    - "Ava & Leo: WTF?! \u2026"
+    - '3ch3l0n: Even if the atmosphere is breathable for humans, it was probably
+      a foolish idea to remove your helmets in such an alien environment. '
+    - 'Zoe & Ethan: Oops. '
+    - "Ava:\u202FWell, we might as well join them, Leo. I don't think I could forgive
+      myself if something happened to them and not me if I kept this helmet on. [Removes
+      helmet]"
+    - "Leo:My mom is going to kill me if she finds out about this\u2026 [Removes
+      helmet] We might as well leave our helmets next to this tunnel that leads back
+      outside. "
+    - "3ch3l0n:Humans\u2026 I do not understand how they can be so illogical and
+      reckless when it comes to their own safety\u2026 done here "
+  - DialogueId: stage_1_scene_4
+    SpineAnimationCharacters: 0000000001000000010000000300000002000000
+    SpineAnimationNames:
+    - Happy
+    - default
+    - default
+    - Anxious_Nervous
+    - default
+    Dialogue:
+    - "Zoe:\u202FI'm glad we all made it here safely! "
+    - 'Leo: We should continue to proceed with caution. If we get hurt, returning
+      to the ship to treat the injuries will likely be difficult. '
+    - "3ch3l0n:\xABcheerful\xBB\u202FI am programmed with a wide array of medical
+      knowledge. If you get injured, I should be able to treat you. "
+    - "Ethan: *Gulp* L-let's not put th-that to the test\u2026 "
+    - 'Ava: I''m looking forward to seeing what we''ll discover.'
