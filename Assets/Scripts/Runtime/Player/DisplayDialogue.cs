@@ -28,7 +28,7 @@ public class DisplayDialogue : MonoBehaviour
 
     void Start()
     {
-        DisplayDialogueById("1");
+        DisplayDialogueById("stage 1 scene 4");
     }
 
     private void InitializeCharacterAnimations()
@@ -104,6 +104,6 @@ public class DisplayDialogue : MonoBehaviour
     public void NextDialogueBtn()
     {
         dialogueIncrement++;
-        DisplayDialogueById("1"); // the string character inside will replace in a future parameter
+        DisplayDialogueById("stage 1 scene 4"); // the string character inside will replace in a future parameter
     }
 }
