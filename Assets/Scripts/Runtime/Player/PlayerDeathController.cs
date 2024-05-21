@@ -20,7 +20,7 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
     private void Update()
     {
         if (transform.position.y < failThreshold && !isDropped ||
-            (PlayerCollisionController.Instance.IsStageCameraActive() &&
+            (PlayerTriggerCollisionController.Instance.IsStageCameraActive() &&
              (transform.position.x > LevelManager.Instance.CurrentPlatform.GetRightmostPlatformDataPosition() ||
               transform.position.x < LevelManager.Instance.CurrentPlatform.GetLeftmostPlatformDataPosition()
              )))
@@ -35,7 +35,7 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
 
             rigidbody2D.velocity = Vector2.zero;
             PlayerDragController.Instance.SetResetToLandingSpot(true);
-            PlayerCollisionController.Instance.ResetCamera();
+            PlayerTriggerCollisionController.Instance.ResetCamera();
             LevelManager.Instance.ResetLevel();
         }
     }

@@ -449,7 +449,7 @@ public class LevelManager : Singleton<LevelManager>
             if (levelPlatform.Equals(levelCount))
             {
                 // platformToRemove = platform;
-                PlayerCollisionController.Instance.ResetCamera();
+                PlayerTriggerCollisionController.Instance.ResetCamera();
                 SpawnPlatforms();
             }
         }
@@ -458,7 +458,7 @@ public class LevelManager : Singleton<LevelManager>
             if (!spawnedPlatforms.ContainsKey(1))
             {
                 //  platformToRemove = platform;
-                PlayerCollisionController.Instance.ResetCamera();
+                PlayerTriggerCollisionController.Instance.ResetCamera();
                 SpawnPlatforms();
             }
         }

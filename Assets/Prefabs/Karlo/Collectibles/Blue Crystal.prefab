@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8111823670818674280}
   - component: {fileID: 3447875065902154455}
   - component: {fileID: 4137615914266467180}
+  - component: {fileID: 8012856432602343386}
   m_Layer: 0
   m_Name: Blue Crystal
   m_TagString: Untagged
@@ -118,9 +119,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.35484314, y: -0.47311783}
+  m_Offset: {x: -0.22626877, y: -0.47311783}
   serializedVersion: 2
-  m_Radius: 5.3605843
+  m_Radius: 8.317699
 --- !u!114 &4137615914266467180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,3 +134,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c33aac20e3738214987c0ac1e07177f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8012856432602343386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5166821640480651933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e16b9e76aaf29d743a5dafed6c851b87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  additionalFuelAmount: 0
