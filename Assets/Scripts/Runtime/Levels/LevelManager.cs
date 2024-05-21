@@ -33,20 +33,22 @@ public class LevelManager : Singleton<LevelManager>
 
     private PlatformController spawnPointPlatform;
     [ShowInInspector] private readonly Dictionary<string, List<GameObject>> prefabPool = new();
-
     [ShowInInspector] private int spawnedPlatformCount;
-    [ShowInInspector] private int levelCount;
+    [ShowInInspector] private int levelCount = 0;
 
-    public List<Transform> cameraPositions = new();
-    public List<Transform> ceilingPositions = new();
+    private readonly List<Transform> cameraPositions = new();
+    private readonly List<Transform> ceilingPositions = new();
 
-    public PlatformController platformToRemove;
-
+    [ShowInInspector] private Platforms currentPlatforms;
+    public Platforms CurrentPlatform => currentPlatforms;
+    
+    private PlatformController platformToRemove;
+    
     private void Start()
     {
         SetNewStage();
     }
-
+    
     private void CreateStagePrefabs(PlatformPrefab[] platformPrefabArray)
     {
         foreach (var prefabToInstantiate in platformPrefabArray)
@@ -165,7 +167,9 @@ public class LevelManager : Singleton<LevelManager>
 
         currentStageDetails = Resources.Load<StageDetails>(levelDataName);
         CreateStagePrefabs(currentStageDetails.PlatformPrefab);
+        
         stagePlatforms = new Platforms[] { };
+        currentPlatforms = currentStageDetails.Platforms[0];
 
         if (!IsLastStage())
         {
@@ -334,6 +338,7 @@ public class LevelManager : Singleton<LevelManager>
                 }
 
                 spawnedPlatformCount = 0;
+                
                 levelCount++;
             }
             else
@@ -409,6 +414,8 @@ public class LevelManager : Singleton<LevelManager>
             }
 
             cmVirtualCamera.Follow = cameraPositions[levelCountToSpawn];
+            currentPlatforms = currentStageDetails.Platforms[levelCountToSpawn];
+
             //ceilingPositions[levelCountToSpawn - 1].gameObject.SetActive(false);
             ceilingPositions[levelCountToSpawn].gameObject.SetActive(true); // GetCurrentSpawnedPlatform()[0].CameraPosition;
             Invoke(nameof(UpdateGameSettings), 1f);
@@ -436,6 +443,7 @@ public class LevelManager : Singleton<LevelManager>
             if (levelPlatform.Equals(levelCount))
             {
                 // platformToRemove = platform;
+                PlayerCollisionController.Instance.ResetCamera();
                 SpawnPlatforms();
             }
         }
@@ -444,6 +452,7 @@ public class LevelManager : Singleton<LevelManager>
             if (!spawnedPlatforms.ContainsKey(1))
             {
                 //  platformToRemove = platform;
+                PlayerCollisionController.Instance.ResetCamera();
                 SpawnPlatforms();
             }
         }
@@ -480,7 +489,7 @@ public class LevelManager : Singleton<LevelManager>
                     {
                         platform.gameObject.SetActive(false);
                     }
-
+                    
                     spawnedPlatforms.Remove(levelCount);
                     levelCount -= 1;
                 }

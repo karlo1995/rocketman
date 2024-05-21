@@ -74,7 +74,7 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
         {
             isLanded = false;
             PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
-            PlayerWalkController.Instance.SetDelayCauseOfLosingBalance();
+            PlayerWalkController.Instance.SetDelayCauseOfLosingBalance(1f);
         }
 
         if (col.gameObject.TryGetComponent(out PlatformCeilingTag _))
@@ -98,5 +98,16 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
             FuelController.Instance.AddFuel(fuelCollectible.AdditionalFuelAmount);
             fuelCollectible.CollidedToPlayer();
         }
+    }
+
+    public bool IsStageCameraActive()
+    {
+        return virtualCameraForStage.activeInHierarchy;
+    }
+
+    public void ResetCamera()
+    {
+        virtualCameraForStage.SetActive(true);
+        virtualCameraForPlayer.SetActive(false);
     }
 }

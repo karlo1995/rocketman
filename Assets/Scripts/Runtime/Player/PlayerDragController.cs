@@ -187,8 +187,6 @@ public class PlayerDragController : Singleton<PlayerDragController>
         var currentPos = lineRenderer.GetPosition(1);
         var distance = currentPos - startPos;
         finalForce = distance * forceToAdd;
-
-        Debug.Log("Magnitude: " + distance.magnitude);
         
         if (distance.magnitude >= 2.5f)
         {
@@ -206,8 +204,14 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     private void PlayThruster()
     {
-        PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
-        PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
+        Debug.Log("Magnitude: " + finalForce.magnitude);
+
+        if (finalForce.magnitude > 2f)
+        {
+            PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
+            PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
+        }
+        
 
         rigidbody2D.AddForce(-finalForce, ForceMode2D.Impulse);
         isReleased = true;

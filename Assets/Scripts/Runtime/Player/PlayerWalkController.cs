@@ -13,27 +13,27 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
     private Transform midPosition;
     private Action doneWalkingCallback;
     
-    public void SetDelayCauseOfLosingBalance()
+    public void SetDelayCauseOfLosingBalance(float distance)
     {
         isLosingBalance = true;
-        StartCoroutine(LosingBalanceCoroutine());
+        StartCoroutine(LosingBalanceCoroutine(distance));
 
     }
     
-    public void MoveTowardMid(Transform midPosition, Action doneWalkingCallback)
+    public void MoveTowardMid(Transform midPosition, float distance, Action doneWalkingCallback)
     {
         this.midPosition = midPosition;
         this.doneWalkingCallback = doneWalkingCallback;
         
         if (!isLosingBalance)
         {
-            StartCoroutine(MoveTowardMiddleCoroutine());
+            StartCoroutine(MoveTowardMiddleCoroutine(distance));
         }
     }
 
-    private IEnumerator MoveTowardMiddleCoroutine()
+    private IEnumerator MoveTowardMiddleCoroutine(float distance)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(distance);
         
         PlayerAnimationController.Instance.FlipX(transform.position - midPosition.transform.position);
         PlayerAnimationController.Instance.PlayAnimation(AnimationNames.WALK_ANIMATION_NAME, true);
@@ -44,7 +44,7 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
         });
     }
 
-    private IEnumerator LosingBalanceCoroutine()
+    private IEnumerator LosingBalanceCoroutine(float distance)
     {
         //if (PlayerCollisionController.Instance.isLanded)
         {
@@ -55,7 +55,7 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
 
             yield return new WaitForSeconds(0.2f);
 
-            StartCoroutine(MoveTowardMiddleCoroutine());
+            StartCoroutine(MoveTowardMiddleCoroutine(distance));
             isLosingBalance = false;
         }
     }

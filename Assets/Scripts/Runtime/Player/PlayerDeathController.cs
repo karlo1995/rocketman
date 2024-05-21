@@ -9,28 +9,33 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
 
     private bool isDropped = true;
     public bool IsDropped => isDropped;
-    
+
     private Rigidbody2D rigidbody2D;
 
     private void Awake()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
-    
+
     private void Update()
     {
-        if (transform.position.y < failThreshold && !isDropped)
+        if (transform.position.y < failThreshold && !isDropped ||
+            (PlayerCollisionController.Instance.IsStageCameraActive() &&
+             (transform.position.x > LevelManager.Instance.CurrentPlatform.GetRightmostPlatformDataPosition() ||
+              transform.position.x < LevelManager.Instance.CurrentPlatform.GetLeftmostPlatformDataPosition()
+             )))
+
         {
             isDropped = true;
             livesCount--;
 
             if (livesCount <= 0)
             {
-
             }
 
             rigidbody2D.velocity = Vector2.zero;
             PlayerDragController.Instance.SetResetToLandingSpot(true);
+            PlayerCollisionController.Instance.ResetCamera();
             LevelManager.Instance.ResetLevel();
         }
     }

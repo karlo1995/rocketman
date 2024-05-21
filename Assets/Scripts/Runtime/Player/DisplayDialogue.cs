@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +29,8 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
 
     public void DisplayDialogueById(string p_id)
     {
+        Debug.Log("Dialogue Controller!");
+        
         dialogueContainer.SetActive(true);
         DialogueItem dialogueItem = dialogueItemDetails.GetDialogueItemById(p_id);
 
