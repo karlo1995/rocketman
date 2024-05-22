@@ -15,6 +15,7 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
     
     public void SetDelayCauseOfLosingBalance(float distance)
     {
+        Debug.Log("lose balance 1");
         isLosingBalance = true;
         StartCoroutine(LosingBalanceCoroutine(distance));
 
@@ -22,6 +23,8 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
     
     public void MoveTowardMid(Transform midPosition, float distance, Action doneWalkingCallback)
     {
+        Debug.Log("move 1");
+
         this.midPosition = midPosition;
         this.doneWalkingCallback = doneWalkingCallback;
         
@@ -36,6 +39,8 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
         yield return new WaitForSeconds(distance);
         if (midPosition != null)
         {
+            Debug.Log("move 2 ");
+
             PlayerAnimationController.Instance.FlipX(transform.position - midPosition.transform.position);
             PlayerAnimationController.Instance.PlayAnimation(AnimationNames.WALK_ANIMATION_NAME, true);
             transform.DOMoveX(midPosition.position.x, 0.5f).OnComplete(() =>
@@ -49,12 +54,16 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
 
     private IEnumerator LosingBalanceCoroutine(float distance)
     {
+        Debug.Log("lose balance 2");
+
         //if (PlayerCollisionController.Instance.isLanded)
         {
             yield return new WaitForSeconds(0.1f);
 
             if (midPosition != null)
-            {
+            {       
+                Debug.Log("lose balance 3");
+
                 PlayerAnimationController.Instance.FlipX(midPosition.transform.position - transform.position);
                 PlayerAnimationController.Instance.PlayAnimation(AnimationNames.LOSING_BALANCE_NAME, false);
 

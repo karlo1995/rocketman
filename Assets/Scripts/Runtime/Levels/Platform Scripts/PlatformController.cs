@@ -22,6 +22,7 @@ namespace Runtime.Levels.Platform_Scripts
         public int SpawnedPlatformIndex => spawnedPlatformIndex;
 
         private bool isSamePlatformCollided;
+        public bool willTriggerCameraMove;
 
         private void Awake()
         {
@@ -31,10 +32,11 @@ namespace Runtime.Levels.Platform_Scripts
             }
         }
 
-        public void InitPlatform(Vector2 platformPosition, int levelPlatform, int spawnedPlatformIndex)
+        public void InitPlatform(Vector2 platformPosition, int levelPlatform, int spawnedPlatformIndex, bool willTriggerCameraMove)
         {
             this.levelPlatform = levelPlatform;
             this.spawnedPlatformIndex = spawnedPlatformIndex;
+            this.willTriggerCameraMove  = willTriggerCameraMove;
 
             transform.DOMove(platformPosition, 0f);
             gameObject.SetActive(true);
@@ -118,7 +120,7 @@ namespace Runtime.Levels.Platform_Scripts
             if (!isSamePlatformCollided)
             {
                 yield return new WaitForSeconds(1f);
-                LevelManager.Instance.SpawnNextPlatform(levelPlatform);
+                LevelManager.Instance.SpawnNextPlatform(willTriggerCameraMove);
             }
         }
     }
