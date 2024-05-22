@@ -11,7 +11,10 @@ namespace Runtime.Collectibles
 
         public void CollidedToPlayer()
         {
-            gameObject.GetComponent<SpriteRenderer>().DOFade(0f, 0.3f);
+            gameObject.GetComponent<SpriteRenderer>().DOFade(0f, 0.3f).OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+            });
         }
     }
 }

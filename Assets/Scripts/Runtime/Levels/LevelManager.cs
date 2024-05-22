@@ -11,6 +11,7 @@ using Runtime.Manager;
 using Runtime.Map_Controller;
 using Script.Misc;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelManager : Singleton<LevelManager>
 {
@@ -91,7 +92,8 @@ public class LevelManager : Singleton<LevelManager>
 
                             collectibleObjectPool.SetActive(true);
                             collectibleObjectPool.transform.position = collectible.CollectiblePosition;
-
+                            collectibleObjectPool.GetComponent<SpriteRenderer>().DOFade(1f, 0f);
+                                
                             spawnedCollectibleData.Add(collectible);
                             break;
                         }
@@ -105,7 +107,8 @@ public class LevelManager : Singleton<LevelManager>
 
                         newCollectible.transform.position = collectible.CollectiblePosition;
                         newCollectible.gameObject.SetActive(true);
-
+                        newCollectible.GetComponent<SpriteRenderer>().DOFade(1f, 0f);
+                        
                         spawnedCollectibleData.Add(collectible);
                     }
                 }
@@ -428,7 +431,7 @@ public class LevelManager : Singleton<LevelManager>
         
         cmVirtualCamera.Follow = cameraPositions[levelCount];
         currentPlatforms = currentStageDetails.Platforms[levelCount];
-        ceilingPositions[levelCount].gameObject.SetActive(true);
+        //ceilingPositions[levelCount].gameObject.SetActive(true);
     }
 
     public void SetPlatformToRemove(PlatformController platform)

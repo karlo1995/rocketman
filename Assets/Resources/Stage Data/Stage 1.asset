@@ -20,16 +20,16 @@ MonoBehaviour:
       CollectibleData: []
     - PlatformId: long_stage1
       PlatformPosition: {x: -9.1, y: -7.59}
-      CollectibleData:
-      - CollectibleId: blue_crystal
-        CollectiblePosition: {x: -10.02, y: -5.9}
+      CollectibleData: []
     CameraPosition: {x: -15.96, y: -8.89}
     CeilingPosition: {x: -10.96, y: -2.33}
   - PlatformName: Level2
     PlatformData:
     - PlatformId: long_stage1
       PlatformPosition: {x: -4.72, y: -6.71}
-      CollectibleData: []
+      CollectibleData:
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: -6.72, y: -5.83}
     - PlatformId: long_stage1
       PlatformPosition: {x: -0.45, y: -5.77}
       CollectibleData: []
@@ -43,7 +43,7 @@ MonoBehaviour:
     - PlatformId: long_stage1
       PlatformPosition: {x: -5.06, y: -5.27}
       CollectibleData:
-      - CollectibleId: fuel_collectible
+      - CollectibleId: blue_crystal
         CollectiblePosition: {x: -1.35, y: -3.57}
     - PlatformId: long_stage1
       PlatformPosition: {x: -8.55, y: -3.5}
@@ -51,84 +51,103 @@ MonoBehaviour:
     - PlatformId: long_stage1
       PlatformPosition: {x: -13.59, y: -5.43}
       CollectibleData:
-      - CollectibleId: fuel_collectible
+      - CollectibleId: blue_crystal
         CollectiblePosition: {x: -11.87, y: -3.07}
-    CameraPosition: {x: -9.15, y: -4.91}
-    CeilingPosition: {x: 0, y: 0}
-  - PlatformName: Level4
-    PlatformData:
     - PlatformId: long_stage1
       PlatformPosition: {x: -11.07, y: -1.85}
       CollectibleData:
-      - CollectibleId: fuel_collectible
+      - CollectibleId: blue_crystal
         CollectiblePosition: {x: -13.26, y: -1.74}
-      - CollectibleId: fuel_collectible
+      - CollectibleId: blue_crystal
         CollectiblePosition: {x: -12.85, y: -0.73}
-      - CollectibleId: fuel_collectible
+      - CollectibleId: blue_crystal
         CollectiblePosition: {x: -11.93, y: -0.1}
-    - PlatformId: long_stage1
-      PlatformPosition: {x: -5.01, y: -2.88}
-      CollectibleData:
-      - CollectibleId: fuel_collectible
-        CollectiblePosition: {x: -9.68, y: 0.77}
-      - CollectibleId: fuel_collectible
-        CollectiblePosition: {x: -8.74, y: 0.1}
-      - CollectibleId: fuel_collectible
-        CollectiblePosition: {x: -7.67, y: -0.79}
-      - CollectibleId: fuel_collectible
-        CollectiblePosition: {x: -6.73, y: -1.44}
-      - CollectibleId: fuel_collectible
-        CollectiblePosition: {x: -5.55, y: -0.75}
-    CameraPosition: {x: -6.49, y: -3}
+    CameraPosition: {x: -8.62, y: -4.62}
     CeilingPosition: {x: 0, y: 0}
-  - PlatformName: Level5
+  - PlatformName: Level4_5
     PlatformData:
     - PlatformId: long_stage1
-      PlatformPosition: {x: -1.58, y: -1.11}
+      PlatformPosition: {x: -4.12, y: -4.81}
       CollectibleData:
       - CollectibleId: blue_crystal
-        CollectiblePosition: {x: -3.56, y: 1.8}
+        CollectiblePosition: {x: -8.69, y: -0.37}
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: -7.749999, y: -1.04}
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: -6.679999, y: -1.93}
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: -5.739999, y: -2.58}
+      - CollectibleId: yellow_crystal
+        CollectiblePosition: {x: -4.559999, y: -1.89}
     - PlatformId: long_stage1
-      PlatformPosition: {x: 1.67, y: -1.27}
+      PlatformPosition: {x: -1.48, y: -2.86}
       CollectibleData:
       - CollectibleId: blue_crystal
-        CollectiblePosition: {x: -0.04, y: 1.72}
-      - CollectibleId: blue_crystal
-        CollectiblePosition: {x: 0.64, y: 0.99}
-      - CollectibleId: blue_crystal
-        CollectiblePosition: {x: 1.47, y: 0.03}
-    - PlatformId: long_stage1
-      PlatformPosition: {x: 4.75, y: 0.59}
+        CollectiblePosition: {x: -2.91, y: -0.95}
+    - PlatformId: short_stage1
+      PlatformPosition: {x: 2.36, y: -3.34}
       CollectibleData:
       - CollectibleId: blue_crystal
-        CollectiblePosition: {x: 3.81, y: 0.59}
-    CameraPosition: {x: 2.37, y: -3}
+        CollectiblePosition: {x: 0.26, y: -0.34}
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: 0.94, y: -1.07}
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: 1.77, y: -2.03}
+    - PlatformId: short_stage1
+      PlatformPosition: {x: 1.07, y: -5.05}
+      CollectibleData:
+      - CollectibleId: yellow_crystal
+        CollectiblePosition: {x: 0.92, y: -3.81}
+    - PlatformId: short_stage1
+      PlatformPosition: {x: 2.32, y: -1.23}
+      CollectibleData:
+      - CollectibleId: yellow_crystal
+        CollectiblePosition: {x: 4.47, y: -0.37}
+    CameraPosition: {x: 0.56, y: -4.27}
     CeilingPosition: {x: 0, y: 0}
-  - PlatformName: 
+  - PlatformName: Level6
     PlatformData:
     - PlatformId: long_stage1
-      PlatformPosition: {x: 4.52, y: -2.26}
+      PlatformPosition: {x: 4.52, y: -4.88}
+      CollectibleData:
+      - CollectibleId: fuel_collectible
+        CollectiblePosition: {x: 4.58, y: -2.44}
+      - CollectibleId: fuel_collectible
+        CollectiblePosition: {x: 4.03, y: -1.45}
+      - CollectibleId: fuel_collectible
+        CollectiblePosition: {x: 5.21, y: -3.7}
+    - PlatformId: long_stage1
+      PlatformPosition: {x: 12.82, y: -1.81}
       CollectibleData:
       - CollectibleId: blue_crystal
-        CollectiblePosition: {x: 4.52, y: 2.76}
+        CollectiblePosition: {x: 8.18, y: -0.26}
       - CollectibleId: blue_crystal
-        CollectiblePosition: {x: 5.7, y: 3.88}
-    - PlatformId: long_stage1
-      PlatformPosition: {x: 8.73, y: 0.49}
-      CollectibleData: []
-    CameraPosition: {x: 9.31, y: 0.27}
+        CollectiblePosition: {x: 5.72, y: -2.79}
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: 6.62, y: -1.25}
+      - CollectibleId: fuel_collectible
+        CollectiblePosition: {x: 12.82, y: -1.1}
+    CameraPosition: {x: 8.92, y: -4.31}
     CeilingPosition: {x: 0, y: 0}
-  - PlatformName: 
+  - PlatformName: Level7
     PlatformData:
     - PlatformId: long_stage1
-      PlatformPosition: {x: 12.99, y: 1.22}
-      CollectibleData: []
+      PlatformPosition: {x: 12.82, y: -1.81}
+      CollectibleData:
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: 8.18, y: -0.26}
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: 5.72, y: -2.79}
+      - CollectibleId: blue_crystal
+        CollectiblePosition: {x: 6.62, y: -1.25}
+      - CollectibleId: fuel_collectible
+        CollectiblePosition: {x: 12.82, y: -1.1}
     - PlatformId: long_stage1
-      PlatformPosition: {x: 9.93, y: 2.98}
+      PlatformPosition: {x: 5.43, y: 1.5}
       CollectibleData: []
-    CameraPosition: {x: 8.48, y: 3.38}
+    CameraPosition: {x: 12.69, y: 1.89}
     CeilingPosition: {x: 0, y: 0}
-  - PlatformName: 
+  - PlatformName: Level8
     PlatformData:
     - PlatformId: long_stage1
       PlatformPosition: {x: 6.05, y: 3.95}
@@ -136,9 +155,9 @@ MonoBehaviour:
     - PlatformId: long_stage1
       PlatformPosition: {x: -1.99, y: 2.87}
       CollectibleData: []
-    CameraPosition: {x: 2.18, y: 5.26}
+    CameraPosition: {x: 2.43, y: 3.44}
     CeilingPosition: {x: 0, y: 0}
-  - PlatformName: 
+  - PlatformName: Level9
     PlatformData:
     - PlatformId: long_stage1
       PlatformPosition: {x: 4.58, y: 6.02}
@@ -151,7 +170,7 @@ MonoBehaviour:
       CollectibleData: []
     CameraPosition: {x: 8.74, y: 5.26}
     CeilingPosition: {x: 0, y: 0}
-  - PlatformName: 
+  - PlatformName: Level10
     PlatformData:
     - PlatformId: long_stage1
       PlatformPosition: {x: 13.59, y: 6.12}

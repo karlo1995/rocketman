@@ -36,11 +36,13 @@ public class FuelController : Singleton<FuelController>
 
     public bool IsFuelEnoughToThrust()
     {
+        return true;
         return fuelAmount > THRUST_DEDUCTION;
     }
     
     public bool IsFuelEnoughToBrake()
     {
+        return true;
         return fuelAmount > BRAKE_DEDUCTION;
     }
 

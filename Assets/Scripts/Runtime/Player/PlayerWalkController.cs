@@ -17,7 +17,7 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
     {
         Debug.Log("lose balance 1");
         isLosingBalance = true;
-        StartCoroutine(LosingBalanceCoroutine(distance));
+        //StartCoroutine(LosingBalanceCoroutine(distance));
 
     }
     
@@ -27,11 +27,8 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
 
         this.midPosition = midPosition;
         this.doneWalkingCallback = doneWalkingCallback;
-        
-        if (!isLosingBalance)
-        {
-            StartCoroutine(MoveTowardMiddleCoroutine(distance));
-        }
+
+        StartCoroutine(!isLosingBalance ? MoveTowardMiddleCoroutine(distance) : LosingBalanceCoroutine(distance));
     }
 
     private IEnumerator MoveTowardMiddleCoroutine(float distance)
