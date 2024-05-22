@@ -44,5 +44,5 @@ public class CharacterAnimationPair
 
 public enum SpineAnimationCharacters
 {
-    Zoe, Leo, Ava, Ethan, Double_Zoe, Double_Leo, Double_Ava, Double_Ethan
+     Zoe, Leo, Ava, Ethan, Double_Zoe, Double_Leo, Double_Ava, Double_Ethan, Echelon
 }

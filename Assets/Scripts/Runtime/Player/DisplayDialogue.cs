@@ -3,11 +3,13 @@ using Script.Misc;
 using UnityEngine;
 using Spine.Unity;
 using TMPro;
+using UnityEngine.UI;
 
 public class DisplayDialogue : Singleton<DisplayDialogue>
 {
     [SerializeField] private DialogueItemDetails dialogueItemDetails;
     [SerializeField] private TMP_Text dialogueTxt;
+    [SerializeField] private SkeletonAnimation echelonExpresionSpineAnimation; //as for min-time ill use ethan as ECHELON as placeholder
     [SerializeField] private SkeletonAnimation zoeExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation ethanExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation leoExpresionSpineAnimation;
@@ -16,18 +18,30 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     [SerializeField] private SkeletonAnimation double_ethanExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation double_leoExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation double_avaExpresionSpineAnimation;
-    
+
+    //sprites
+    [SerializeField] private Sprite zoeSprite, ethanSprite, leoSprite, avaSprite, echelonSprite, ava_leoSprite, zoe_ethanSprite;
+    [SerializeField] private Image spriteOneNamePlaceHolder, spriteTwoNamePlaceHolder;
     public GameObject dialogueContainer;
+    public Button prevBtn;
     private int dialogueIncrement = 0; // can be public parameter in the future
 
     private Dictionary<SpineAnimationCharacters, SkeletonAnimation> characterAnimations;
-    
+    private Dictionary<SpineAnimationCharacters, Sprite> characterSprites;
+
     private bool isOpen;
     public bool IsOpen => isOpen;
 
     private void Awake()
     {
         InitializeCharacterAnimations();
+        InitializeCharacterSprites();
+
+        if (dialogueIncrement <= 0)
+        {
+            prevBtn.gameObject.SetActive(false);
+            dialogueIncrement = 0;
+        }
     }
 
     public void Open()
@@ -40,6 +54,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     {
         characterAnimations = new Dictionary<SpineAnimationCharacters, SkeletonAnimation>
         {
+            { SpineAnimationCharacters.Echelon, echelonExpresionSpineAnimation },
             { SpineAnimationCharacters.Zoe, zoeExpresionSpineAnimation },
             { SpineAnimationCharacters.Ethan, ethanExpresionSpineAnimation },
             { SpineAnimationCharacters.Leo, leoExpresionSpineAnimation },
@@ -49,8 +64,20 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
             { SpineAnimationCharacters.Double_Leo, double_leoExpresionSpineAnimation },
             { SpineAnimationCharacters.Double_Ava, double_avaExpresionSpineAnimation }
         };
-        
+
         dialogueContainer.SetActive(false);
+    }
+
+    private void InitializeCharacterSprites()
+    {
+        characterSprites = new Dictionary<SpineAnimationCharacters, Sprite>
+        {
+            { SpineAnimationCharacters.Echelon, echelonSprite },
+            { SpineAnimationCharacters.Zoe, zoeSprite },
+            { SpineAnimationCharacters.Ethan, ethanSprite },
+            { SpineAnimationCharacters.Leo, leoSprite },
+            { SpineAnimationCharacters.Ava, avaSprite },
+        };
     }
 
     private void DisplayDialogueById(string p_id)
@@ -65,36 +92,82 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
                 var dialogueHolder = dialogueItem.DialogueHolders[dialogueIncrement];
                 dialogueTxt.text = dialogueHolder.DialogueText;
 
+                // setactive = false all character animations
                 foreach (var character in characterAnimations.Values)
                 {
                     character.gameObject.SetActive(false);
                 }
 
+                // checking active characters
+                var activeCharacters = new List<SpineAnimationCharacters>();
+
+                // activate to true the current characters' animations and update sprite
                 foreach (var characterAnimation in dialogueHolder.CharacterAnimations)
                 {
+                    Debug.Log($"Character: {characterAnimation.Character}"); // to check what is the current character is on ID parameter
+
                     if (characterAnimations.TryGetValue(characterAnimation.Character, out var skeletonAnimation))
                     {
                         skeletonAnimation.gameObject.SetActive(true);
                         PlayAnimation(skeletonAnimation, "Facial_Expressions/" + characterAnimation.SpineAnimationName, true);
+
+                        activeCharacters.Add(characterAnimation.Character);
                     }
                     else
                     {
                         Debug.LogWarning($"No SkeletonAnimation found for character: {characterAnimation.Character}");
                     }
                 }
+
+                // ppdate the sprite based on active characters/parameter
+                UpdateSpritePlaceholder(activeCharacters);
             }
             else
             {
                 dialogueContainer.SetActive(false);
                 dialogueTxt.text = "";
                 dialogueIncrement = 0;
-                
+
                 isOpen = false;
             }
         }
         else
         {
             Debug.LogWarning($"No dialogue item found for ID: {p_id}");
+        }
+    }
+
+    private void UpdateSpritePlaceholder(List<SpineAnimationCharacters> activeCharacters)
+    {
+        if (activeCharacters.Contains(SpineAnimationCharacters.Double_Leo) && activeCharacters.Contains(SpineAnimationCharacters.Ava))
+        {
+            spriteOneNamePlaceHolder.gameObject.SetActive(false);
+            //changing placeholder for sprite names
+            spriteTwoNamePlaceHolder.gameObject.SetActive(true);
+            spriteTwoNamePlaceHolder.sprite = ava_leoSprite;
+        }
+        else if (activeCharacters.Contains(SpineAnimationCharacters.Zoe) && activeCharacters.Contains(SpineAnimationCharacters.Double_Ethan))
+        {
+            spriteOneNamePlaceHolder.gameObject.SetActive(false);
+            //changing placeholder for sprite names
+            spriteTwoNamePlaceHolder.gameObject.SetActive(true);
+            spriteTwoNamePlaceHolder.sprite = zoe_ethanSprite;
+        }
+        else if (activeCharacters.Count == 1)
+        {
+            if (characterSprites.TryGetValue(activeCharacters[0], out var sprite))
+            {
+                
+                spriteTwoNamePlaceHolder.gameObject.SetActive(false);
+                spriteOneNamePlaceHolder.gameObject.SetActive(true);
+                spriteOneNamePlaceHolder.sprite = sprite;
+            }
+        }
+        else
+        {
+            // default is null
+            spriteOneNamePlaceHolder.sprite = null;
+            spriteTwoNamePlaceHolder.sprite = null;
         }
     }
 
@@ -114,6 +187,25 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     public void NextDialogueBtn()
     {
         dialogueIncrement++;
-        DisplayDialogueById("stage 1 scene 1"); // the string character inside will replace in a future parameter
+        if(dialogueIncrement > 0)
+        {
+            prevBtn.gameObject.SetActive(true);
+        }
+        DisplayDialogueById("stage 1 scene 1");
+    }
+
+    public void PrevDialogueBtn()
+    {
+        dialogueIncrement--;
+        if (dialogueIncrement <= 0)
+        {
+            prevBtn.gameObject.SetActive(false);
+            dialogueIncrement = 0;
+        }
+        else if(dialogueIncrement > 0)
+        {
+            prevBtn.gameObject.SetActive(true);
+        }
+        DisplayDialogueById("stage 1 scene 1");
     }
 }

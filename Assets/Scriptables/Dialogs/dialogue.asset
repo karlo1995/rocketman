@@ -15,158 +15,153 @@ MonoBehaviour:
   DialogueItems:
   - DialogueId: stage 1 scene 1
     DialogueHolders:
-    - DialogueText: "Ethan: \xABrelieved\xBB\u202FThat felt like it took forever!
-        I'm glad we've finally landed again. "
+    - DialogueText: 'That felt like it took forever! I''m glad we''ve finally landed
+        again. '
       CharacterAnimations:
       - Character: 3
         SpineAnimationName: Relieved
-    - DialogueText: "Ava: Considering that something has been interfering with our
-        sensors, I'm glad we went so slowly. <Pause as portrait switches to \xABgrimacing\xBB
+    - DialogueText: "Considering that something has been interfering with our sensors,
+        I'm glad we went so slowly. <Pause as portrait switches to \xABgrimacing\xBB
         before the rest of the text appears>\u202FIt beats a crash landing any day.cha "
       CharacterAnimations:
       - Character: 2
         SpineAnimationName: 
-    - DialogueText: 'Ava: Zoe, have you managed to isolate the interference and adjust
+    - DialogueText: 'Zoe, have you managed to isolate the interference and adjust
         for it? This is more your area of expertise than mine. '
       CharacterAnimations:
       - Character: 2
         SpineAnimationName: 
-    - DialogueText: "Zoe: \xABconcentrating\xBB\u202FI'm trying, Ava, but it's tricky.
+    - DialogueText: "\xABconcentrating\xBB\u202FI'm trying, Ava, but it's tricky.
         The frequency of the interference keeps shifting around. "
       CharacterAnimations:
       - Character: 0
         SpineAnimationName: Concentrating_Focused
   - DialogueId: stage 1 scene 2
     DialogueHolders:
-    - DialogueText: "Zoe:\xABtriumphant\xBB\u202FYes! Interference is isolated, and
-        shifting frequency is compensated for. I'm sending you the data now. "
+    - DialogueText: "\xABtriumphant\xBB\u202FYes! Interference is isolated, and shifting
+        frequency is compensated for. I'm sending you the data now. "
       CharacterAnimations:
       - Character: 0
         SpineAnimationName: 
-    - DialogueText: "Ava:\xABsmiling\xBB\u202FThanks, I'll get our sensors back in
-        working order in a jiffy. "
+    - DialogueText: "\xABsmiling\xBB\u202FThanks, I'll get our sensors back in working
+        order in a jiffy. "
       CharacterAnimations:
       - Character: 2
         SpineAnimationName: 
-    - DialogueText: "Leo:\xABshocked\xBB\u202FWoah\u2026 what's that up there? "
+    - DialogueText: "\xABshocked\xBB\u202FWoah\u2026 what's that up there? "
       CharacterAnimations:
       - Character: 1
         SpineAnimationName: 
-    - DialogueText: "Ethan:\xABconfused\xBB\u202FLight? Down here? How is that even
-        possible? "
+    - DialogueText: "\xABconfused\xBB\u202FLight? Down here? How is that even possible? "
       CharacterAnimations:
       - Character: 3
         SpineAnimationName: Confused
-    - DialogueText: "3ch3l0n:Hmm\u2026 It would appear that something is generating
-        electromagnetic waves with a frequency equal to what humans call visible
-        light. "
+    - DialogueText: "Hmm\u2026 It would appear that something is generating electromagnetic
+        waves with a frequency equal to what humans call visible light. "
       CharacterAnimations:
-      - Character: 3
+      - Character: 8
         SpineAnimationName: 
-    - DialogueText: "Zoe:\xABeager\xBB\u202FLet's check it out! "
+    - DialogueText: "\xABeager\xBB\u202FLet's check it out! "
       CharacterAnimations:
       - Character: 0
         SpineAnimationName: 
-    - DialogueText: "Leo:\xABserious\xBB\u202FOur main goal is to determine where
-        the extra oxygen comes from, not investigate mysterious light sources. "
+    - DialogueText: "\xABserious\xBB\u202FOur main goal is to determine where the
+        extra oxygen comes from, not investigate mysterious light sources. "
       CharacterAnimations:
       - Character: 1
         SpineAnimationName: 
-    - DialogueText: 'Ethan:Uh, Leo, now that my scanners are working again, they
-        seem to indicate that the oxygen is probably coming from the same place as
-        that light. '
+    - DialogueText: 'Uh, Leo, now that my scanners are working again, they seem to
+        indicate that the oxygen is probably coming from the same place as that light. '
       CharacterAnimations:
       - Character: 3
         SpineAnimationName: 
-    - DialogueText: "Zoe:\xABeager\xBBAwesomesauce! <pause as expression changes
-        to \xABconfused\xBB and then the rest of the text appears>\u202FSo\u2026
-        how do we get up there? "
+    - DialogueText: "\xABeager\xBBAwesomesauce! <pause as expression changes to \xABconfused\xBB
+        and then the rest of the text appears>\u202FSo\u2026 how do we get up there? "
       CharacterAnimations:
       - Character: 0
         SpineAnimationName: 
   - DialogueId: stage 1 scene 3
     DialogueHolders:
-    - DialogueText: 'Ethan: Woah! Unlike the atmosphere outside, the oxygen levels
-        and atmospheric pressure here are high enough that we can survive without
-        our helmets. '
+    - DialogueText: 'Woah! Unlike the atmosphere outside, the oxygen levels and atmospheric
+        pressure here are high enough that we can survive without our helmets. '
       CharacterAnimations:
       - Character: 3
         SpineAnimationName: Surprised_with_Sensor
-    - DialogueText: 'Zoe: You mean we can take these off?! '
+    - DialogueText: 'You mean we can take these off?! '
       CharacterAnimations:
       - Character: 0
         SpineAnimationName: 
-    - DialogueText: "Ava & Leo:\xABhorrified\xBB Wait\u2013! "
+    - DialogueText: "\xABhorrified\xBB Wait\u2013! "
       CharacterAnimations:
       - Character: 2
         SpineAnimationName: 
       - Character: 5
         SpineAnimationName: 
-    - DialogueText: "Zoe: Huh, the air doesn't smell stagnant, which one might expect.
+    - DialogueText: "Huh, the air doesn't smell stagnant, which one might expect.
         It certainly isn't musty, as that would require a lot of moisture. Maybe
         it's slightly\u2026 earthy? "
       CharacterAnimations:
       - Character: 0
         SpineAnimationName: 
-    - DialogueText: 'Ethan: Huh, you''re right. Though maybe it''d be better to say
-        it smells Marsy? In any case, I can smell a mineral-like tang in the air. '
+    - DialogueText: 'Huh, you''re right. Though maybe it''d be better to say it smells
+        Marsy? In any case, I can smell a mineral-like tang in the air. '
       CharacterAnimations:
       - Character: 3
         SpineAnimationName: Neutral
-    - DialogueText: "Ava & Leo:\xABWTF?! Expressions\xBB\u202F\u2026  "
+    - DialogueText: "\xABWTF?! Expressions\xBB\u202F\u2026  "
       CharacterAnimations:
       - Character: 2
         SpineAnimationName: 
       - Character: 5
         SpineAnimationName: 
-    - DialogueText: '3ch3l0n: Even if the atmosphere is breathable for humans, it
-        was probably a foolish idea to remove your helmets in such an alien environment. '
+    - DialogueText: 'Even if the atmosphere is breathable for humans, it was probably
+        a foolish idea to remove your helmets in such an alien environment. '
       CharacterAnimations:
-      - Character: 3
+      - Character: 8
         SpineAnimationName: Neutral
-    - DialogueText: 'Zoe & Ethan: Oops. '
+    - DialogueText: 'Oops. '
       CharacterAnimations:
       - Character: 0
         SpineAnimationName: Blank_Oblivious
       - Character: 7
         SpineAnimationName: Blank_Oblivious
-    - DialogueText: "Ava:\u202FWell, we might as well join them, Leo. I don't think
-        I could forgive myself if something happened to them and not me if I kept
-        this helmet on."
+    - DialogueText: Well, we might as well join them, Leo. I don't think I could
+        forgive myself if something happened to them and not me if I kept this helmet
+        on.
       CharacterAnimations:
       - Character: 2
         SpineAnimationName: 
-    - DialogueText: "Leo: My mom is going to kill me if she finds out about this\u2026 
+    - DialogueText: "My mom is going to kill me if she finds out about this\u2026 
         We might as well leave our helmets next to this tunnel that leads back outside. "
       CharacterAnimations:
       - Character: 1
         SpineAnimationName: 
-    - DialogueText: "3ch3l0n: Humans\u2026 I do not understand how they can be so
-        illogical and reckless when it comes to their own safety\u2026 "
+    - DialogueText: "Humans\u2026 I do not understand how they can be so illogical
+        and reckless when it comes to their own safety\u2026 "
       CharacterAnimations:
-      - Character: 3
-        SpineAnimationName: Neutral
+      - Character: 8
+        SpineAnimationName: 
   - DialogueId: stage 1 scene 4
     DialogueHolders:
-    - DialogueText: "Zoe:\u202FI'm glad we all made it here safely! "
+    - DialogueText: 'I''m glad we all made it here safely! '
       CharacterAnimations:
       - Character: 0
         SpineAnimationName: Happy
-    - DialogueText: "Leo:\u202FWe should continue to proceed with caution. If we
-        get hurt, returning to the ship to treat the injuries will likely be difficult. "
+    - DialogueText: 'We should continue to proceed with caution. If we get hurt,
+        returning to the ship to treat the injuries will likely be difficult. '
       CharacterAnimations:
       - Character: 1
         SpineAnimationName: 
-    - DialogueText: "3ch3l0n:\u202FI am programmed with a wide array of medical knowledge.
-        If you get injured, I should be able to treat you. "
+    - DialogueText: 'I am programmed with a wide array of medical knowledge. If you
+        get injured, I should be able to treat you. '
       CharacterAnimations:
       - Character: 3
         SpineAnimationName: Neutral
-    - DialogueText: "Ethan: *Gulp* L-let's not put th-that to the test\u2026 "
+    - DialogueText: "*Gulp* L-let's not put th-that to the test\u2026 "
       CharacterAnimations:
       - Character: 3
         SpineAnimationName: Anxious_Nervous
-    - DialogueText: 'Ava: I''m looking forward to seeing what we''ll discover.  '
+    - DialogueText: 'I''m looking forward to seeing what we''ll discover.  '
       CharacterAnimations:
       - Character: 2
         SpineAnimationName: 
