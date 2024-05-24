@@ -92,24 +92,29 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
                 var dialogueHolder = dialogueItem.DialogueHolders[dialogueIncrement];
                 dialogueTxt.text = dialogueHolder.DialogueText;
 
-                // setactive = false all character animations
+                // Deactivate all character animations
                 foreach (var character in characterAnimations.Values)
                 {
                     character.gameObject.SetActive(false);
                 }
 
-                // checking active characters
+                // Track active characters
                 var activeCharacters = new List<SpineAnimationCharacters>();
 
-                // activate to true the current characters' animations and update sprite
+                // Activate the current characters' animations and update sprite
                 foreach (var characterAnimation in dialogueHolder.CharacterAnimations)
                 {
-                    Debug.Log($"Character: {characterAnimation.Character}"); // to check what is the current character is on ID parameter
+                    Debug.Log($"Character: {characterAnimation.Character}"); // Debug log for active characters
 
                     if (characterAnimations.TryGetValue(characterAnimation.Character, out var skeletonAnimation))
                     {
                         skeletonAnimation.gameObject.SetActive(true);
-                        PlayAnimation(skeletonAnimation, "Facial_Expressions/" + characterAnimation.SpineAnimationName, true);
+
+                        // Try the first animation name, if not found, try the second one
+                        if (!PlayAnimation(skeletonAnimation, "Facial_Expressions/" + characterAnimation.SpineAnimationName, true))
+                        {
+                            PlayAnimation(skeletonAnimation, "expressions/" + characterAnimation.SpineAnimationName, true);
+                        }
 
                         activeCharacters.Add(characterAnimation.Character);
                     }
@@ -119,7 +124,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
                     }
                 }
 
-                // ppdate the sprite based on active characters/parameter
+                // Update the sprite based on active characters
                 UpdateSpritePlaceholder(activeCharacters);
             }
             else
@@ -157,7 +162,6 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         {
             if (characterSprites.TryGetValue(activeCharacters[0], out var sprite))
             {
-                
                 spriteTwoNamePlaceHolder.gameObject.SetActive(false);
                 spriteOneNamePlaceHolder.gameObject.SetActive(true);
                 spriteOneNamePlaceHolder.sprite = sprite;
@@ -171,16 +175,18 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         }
     }
 
-    private void PlayAnimation(SkeletonAnimation skeletonAnimation, string animationName, bool isLoop)
+    private bool PlayAnimation(SkeletonAnimation skeletonAnimation, string animationName, bool isLoop)
     {
         var animation = skeletonAnimation.Skeleton.Data.FindAnimation(animationName);
         if (animation != null)
         {
             skeletonAnimation.state.SetAnimation(0, animationName, isLoop);
+            return true;
         }
         else
         {
             Debug.LogWarning($"Animation not found: {animationName}");
+            return false;
         }
     }
 
