@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.esotericsoftware.spine.spine-csharp": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-csharp/src#4.1",
     "com.unity.ads": "4.4.2",
     "com.unity.cinemachine": "2.9.7",
     "com.unity.collab-proxy": "2.0.0",
