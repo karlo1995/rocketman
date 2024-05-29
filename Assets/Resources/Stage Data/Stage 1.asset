@@ -21,6 +21,9 @@ MonoBehaviour:
     - PlatformId: long_stage1
       PlatformPosition: {x: -9.1, y: -7.59}
       CollectibleData: []
+    WallData:
+    - WallId: big_wall_downward
+      WallPosition: {x: -10.24, y: -8.42}
     CameraPosition: {x: -15.96, y: -8.89}
     CeilingPosition: {x: -10.96, y: -2.33}
   - PlatformName: Level2
@@ -36,6 +39,7 @@ MonoBehaviour:
     - PlatformId: long_stage1
       PlatformPosition: {x: 3.37, y: -7.07}
       CollectibleData: []
+    WallData: []
     CameraPosition: {x: -1.18, y: -6.5}
     CeilingPosition: {x: 0, y: 0}
   - PlatformName: Level3
@@ -62,6 +66,7 @@ MonoBehaviour:
         CollectiblePosition: {x: -12.85, y: -0.73}
       - CollectibleId: blue_crystal
         CollectiblePosition: {x: -11.93, y: -0.1}
+    WallData: []
     CameraPosition: {x: -8.62, y: -4.62}
     CeilingPosition: {x: 0, y: 0}
   - PlatformName: Level4_5
@@ -103,6 +108,7 @@ MonoBehaviour:
       CollectibleData:
       - CollectibleId: yellow_crystal
         CollectiblePosition: {x: 4.47, y: -0.37}
+    WallData: []
     CameraPosition: {x: 0.56, y: -4.27}
     CeilingPosition: {x: 0, y: 0}
   - PlatformName: Level6
@@ -127,6 +133,7 @@ MonoBehaviour:
         CollectiblePosition: {x: 6.62, y: -1.25}
       - CollectibleId: fuel_collectible
         CollectiblePosition: {x: 12.82, y: -1.1}
+    WallData: []
     CameraPosition: {x: 8.92, y: -4.31}
     CeilingPosition: {x: 0, y: 0}
   - PlatformName: Level7
@@ -145,7 +152,8 @@ MonoBehaviour:
     - PlatformId: long_stage1
       PlatformPosition: {x: 5.43, y: 1.5}
       CollectibleData: []
-    CameraPosition: {x: 12.69, y: 1.89}
+    WallData: []
+    CameraPosition: {x: 9.13, y: -1.32}
     CeilingPosition: {x: 0, y: 0}
   - PlatformName: Level8
     PlatformData:
@@ -155,6 +163,7 @@ MonoBehaviour:
     - PlatformId: long_stage1
       PlatformPosition: {x: -1.99, y: 2.87}
       CollectibleData: []
+    WallData: []
     CameraPosition: {x: 2.43, y: 3.44}
     CeilingPosition: {x: 0, y: 0}
   - PlatformName: Level9
@@ -168,6 +177,7 @@ MonoBehaviour:
     - PlatformId: long_stage1
       PlatformPosition: {x: 10.83, y: 3.6}
       CollectibleData: []
+    WallData: []
     CameraPosition: {x: 8.74, y: 5.26}
     CeilingPosition: {x: 0, y: 0}
   - PlatformName: Level10
@@ -178,20 +188,39 @@ MonoBehaviour:
     - PlatformId: long_stage1
       PlatformPosition: {x: 21.45, y: 6.12}
       CollectibleData: []
+    WallData: []
     CameraPosition: {x: 18.17, y: 5.86}
     CeilingPosition: {x: 0, y: 0}
   PlatformPrefab:
-  - PrefabId: opening_stage1
+  - CreatePool: 1
+    PrefabId: opening_stage1
     PlatformObject: {fileID: 8907011088348564515, guid: fffcb1e311466a548bcbf181d64662a9, type: 3}
-  - PrefabId: short_stage1
+  - CreatePool: 1
+    PrefabId: short_stage1
     PlatformObject: {fileID: 941035725850501142, guid: c8494d2e12cd05141802dca8ed410d35, type: 3}
-  - PrefabId: long_stage1
+  - CreatePool: 1
+    PrefabId: long_stage1
     PlatformObject: {fileID: 5432986234607006209, guid: 00ba6d59c9cc5e6499aa54acf013d88c, type: 3}
-  - PrefabId: fuel_collectible
+  - CreatePool: 1
+    PrefabId: fuel_collectible
     PlatformObject: {fileID: 3876337210023864036, guid: f376d2a526fccae42839348d99068d9b, type: 3}
-  - PrefabId: blue_crystal
+  - CreatePool: 1
+    PrefabId: blue_crystal
     PlatformObject: {fileID: 5166821640480651933, guid: f22c84d7fccd34a459adbfd173c54b8c, type: 3}
-  - PrefabId: yellow_crystal
+  - CreatePool: 1
+    PrefabId: yellow_crystal
     PlatformObject: {fileID: 5166821640480651933, guid: db277e563f3a1c9438a3e14bf9ba19be, type: 3}
+  - CreatePool: 0
+    PrefabId: big_wall_downward
+    PlatformObject: {fileID: 3282127253230189549, guid: 782d77d5d75b9d14387442379285aa55, type: 3}
+  - CreatePool: 0
+    PrefabId: big_wall_upward
+    PlatformObject: {fileID: 1645530726517586128, guid: 4a6001fb70e88fe4a814c5604174ae4f, type: 3}
+  - CreatePool: 0
+    PrefabId: small_wall_downward
+    PlatformObject: {fileID: 1021331596821393486, guid: e6d85b8c1101e624189b3fa11c5e5730, type: 3}
+  - CreatePool: 0
+    PrefabId: small_wall_upward
+    PlatformObject: {fileID: 3404125659922705391, guid: b10915e49232cdf4990a5cbc12c67393, type: 3}
   IsLastStage: 0
   IsNextStageBoss: 1

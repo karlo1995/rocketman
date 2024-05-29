@@ -185,7 +185,6 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     private void DragEnd()
     {
-        canDrag = false;
         isDragging = false;
         lineRenderer.enabled = false;
 
@@ -195,18 +194,23 @@ public class PlayerDragController : Singleton<PlayerDragController>
         var currentPos = lineRenderer.GetPosition(1);
         var distance = currentPos - startPos;
         finalForce = distance * forceToAdd;
-        
-        if (distance.magnitude >= 2.5f)
-        {
-            Invoke(nameof(PlayThruster), 0.5f);
-            PlayerAnimationController.Instance.PlayAnimation(AnimationNames.HARD_LAUNCH_ANIMATION_NAME, false);
-        }
-        else
-        {
-            rigidbody2D.velocity = Vector2.zero;
 
-            Invoke(nameof(PlayThruster), 0.5f);
-            PlayerAnimationController.Instance.PlayAnimation(AnimationNames.SOFT_LAUNCH_ANIMATION_NAME, false);
+        if (finalForce.magnitude > 0f)
+        {
+            canDrag = false;
+
+            if (distance.magnitude >= 2.5f)
+            {
+                Invoke(nameof(PlayThruster), 0.5f);
+                PlayerAnimationController.Instance.PlayAnimation(AnimationNames.HARD_LAUNCH_ANIMATION_NAME, false);
+            }
+            else
+            {
+                rigidbody2D.velocity = Vector2.zero;
+
+                Invoke(nameof(PlayThruster), 0.5f);
+                PlayerAnimationController.Instance.PlayAnimation(AnimationNames.SOFT_LAUNCH_ANIMATION_NAME, false);
+            }
         }
     }
 
