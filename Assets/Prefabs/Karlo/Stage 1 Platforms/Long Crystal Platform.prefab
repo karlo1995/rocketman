@@ -453,7 +453,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4325971464175699498}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.66, y: 13.6, z: 0}
+  m_LocalPosition: {x: -5.8, y: 11.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -727,6 +727,8 @@ MonoBehaviour:
   midLandingPosition: {fileID: 8329873805318162519}
   midLandingWalkingPosition: {fileID: 371688217151311367}
   levelPlatform: 0
+  willTriggerCameraMove: 0
+  IsActive: 0
 --- !u!1 &6326652985993609281
 GameObject:
   m_ObjectHideFlags: 0

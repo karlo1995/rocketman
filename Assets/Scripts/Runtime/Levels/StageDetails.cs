@@ -11,6 +11,19 @@ namespace Runtime.Levels
 
         public bool IsLastStage;
         public bool IsNextStageBoss;
+
+        public PlatformPrefab GetPlatformPrefabById(string id)
+        {
+            foreach (var prefab in PlatformPrefab)
+            {
+                if (prefab.PrefabId.Equals(id))
+                {
+                    return prefab;
+                }
+            }
+
+            return null;
+        }
     }
 
     [System.Serializable]
@@ -19,9 +32,10 @@ namespace Runtime.Levels
         [Title("LEVEL PLATFORM", horizontalLine: true, bold: true)]
         public string PlatformName;
         public PlatformData[] PlatformData;
+        public WallData[] WallData;
         public Vector2 CameraPosition;
         public Vector2 CeilingPosition;
-
+        
         public float GetRightmostPlatformDataPosition()
         {
             var farthestXDistance = Mathf.NegativeInfinity;
@@ -51,11 +65,28 @@ namespace Runtime.Levels
 
             return farthestXDistance - 5f;
         }
+        
+        public Vector2 GetSpawnPosition()
+        {
+            var spawnPosition = PlatformData[0].PlatformPosition;
+            spawnPosition = new Vector2(spawnPosition.x - 0.5f, spawnPosition.y + 2f);
+
+            return spawnPosition;
+        }
+        
+        public Vector2 GetLaunchPosition()
+        {
+            var launchPosition = PlatformData[0].PlatformPosition;
+            launchPosition = new Vector2(launchPosition.x - 0.5f, launchPosition.y - 2f);
+            
+            return launchPosition;
+        }
     }
 
     [System.Serializable]
     public class PlatformPrefab
     {
+        public bool CreatePool;
         public string PrefabId;
         public GameObject PlatformObject;
     }
@@ -73,5 +104,12 @@ namespace Runtime.Levels
     {
         public string CollectibleId;
         public Vector2 CollectiblePosition;
+    }
+    
+    [System.Serializable]
+    public class WallData
+    {
+        public string WallId;
+        public Vector2 WallPosition;
     }
 }

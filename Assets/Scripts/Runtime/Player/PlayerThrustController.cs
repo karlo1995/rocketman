@@ -86,9 +86,16 @@ public class PlayerThrustController : Singleton<PlayerThrustController>
                     PlayerAnimationController.Instance.PlayAnimation(AnimationNames.THRUST_ANIMATION_NAME, true);
                     PlayerAnimationController.Instance.PlayThrusterAnimation(true, true);
 
+                    // Vector3 relativeVelocity = targetVelocity - rigidbody.velocity;
+                    // relativeVelocity.y = rigidbody.velocity.y;
+                    // rigidbody.Velocity += relativeVelocity * Time.fixedDeltaTime * accelerationSpeed;
+                    
+                   // rigidbody2D.AddForce(rigidbody2D.velocity, ForceMode2D.Force);
+                    
                     rigidbody2D.velocity = PlayerAnimationController.Instance.GetPlayerFlipX() ? 
-                        new Vector2(rigidbody2D.velocity.x + fuelSpeed / 10f, rigidbody2D.velocity.y + fuelSpeed) : 
-                        new Vector2(rigidbody2D.velocity.x - fuelSpeed / 10f, rigidbody2D.velocity.y + fuelSpeed);
+                        new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + fuelSpeed) : 
+                        new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + fuelSpeed);
+                        
                     
                     FuelController.Instance.UseThrustFuel();
                 }

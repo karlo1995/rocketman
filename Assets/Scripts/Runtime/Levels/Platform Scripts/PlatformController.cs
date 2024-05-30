@@ -17,6 +17,7 @@ namespace Runtime.Levels.Platform_Scripts
         [SerializeField] private Transform midLandingPosition;
         [SerializeField] private Transform midLandingWalkingPosition;
 
+        private SpriteRenderer spriteRenderer;
         public int levelPlatform;
         private int spawnedPlatformIndex;
         public int SpawnedPlatformIndex => spawnedPlatformIndex;
@@ -24,8 +25,12 @@ namespace Runtime.Levels.Platform_Scripts
         private bool isSamePlatformCollided;
         public bool willTriggerCameraMove;
 
+        private bool isActive;
+        public bool IsActive;
+
         private void Awake()
         {
+            spriteRenderer = GetComponent<SpriteRenderer>();
             foreach (var trigger in platformTriggers)
             {
                 trigger.SetActive(false);
@@ -36,15 +41,26 @@ namespace Runtime.Levels.Platform_Scripts
         {
             this.levelPlatform = levelPlatform;
             this.spawnedPlatformIndex = spawnedPlatformIndex;
-            this.willTriggerCameraMove  = willTriggerCameraMove;
+            this.willTriggerCameraMove = willTriggerCameraMove;
 
-            transform.DOMove(platformPosition, 0f);
-            gameObject.SetActive(true);
+            transform.DOMove(platformPosition, 0f).OnComplete(SpawnPlatform);
 
             foreach (var trigger in platformTriggers)
             {
                 trigger.SetActive(true);
             }
+        }
+
+        public void RemovePlatform()
+        {
+            isActive = false;
+            spriteRenderer.DOFade(0f, 0.3f).OnComplete(() => { gameObject.SetActive(false); });
+        }
+
+        private void SpawnPlatform()
+        {
+            isActive = true;
+            spriteRenderer.DOFade(1f, 0.3f).OnComplete(() => { gameObject.SetActive(true); });
         }
 
         public void CollisionEnterBehaviour(bool isSamePlatformCollided)
