@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using Script.Misc;
-using UnityEngine;
 using Spine.Unity;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class DisplayDialogue : Singleton<DisplayDialogue>
@@ -20,7 +20,6 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     [SerializeField] private SkeletonAnimation double_leoExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation double_avaExpresionSpineAnimation;
 
-
     //sprites
     [SerializeField] private Sprite zoeSprite, ethanSprite, leoSprite, avaSprite, echelonSprite, ava_leoSprite, zoe_ethanSprite;
     [SerializeField] private Image spriteOneNamePlaceHolder, spriteTwoNamePlaceHolder;
@@ -34,15 +33,11 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     private bool isOpen;
     public bool IsOpen => isOpen;
 
-    public Animator animator;
-    private float typingSpeed = 0.03f;
-
     private void Awake()
     {
         InitializeCharacterAnimations();
         InitializeCharacterSprites();
 
-       
         if (dialogueIncrement <= 0)
         {
             prevBtn.gameObject.SetActive(false);
@@ -52,19 +47,9 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
 
     public void Open()
     {
-       
         isOpen = true;
         DisplayDialogueById("stage 1 scene 1");
     }
-
-    void Start()
-    {
-        animator.SetBool("IsOpen", true);
-        
-    }
-
-    
-    
 
     private void InitializeCharacterAnimations()
     {
@@ -96,46 +81,39 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         };
     }
 
-   
-
     private void DisplayDialogueById(string p_id)
     {
+        StopAllCoroutines();
         dialogueContainer.SetActive(true);
         var dialogueItem = dialogueItemDetails.GetDialogueItemById(p_id);
 
         if (dialogueItem != null)
         {
-          
             if (dialogueIncrement >= 0 && dialogueIncrement < dialogueItem.DialogueHolders.Count)
             {
                 var dialogueHolder = dialogueItem.DialogueHolders[dialogueIncrement];
+                dialogueTxt.text = dialogueHolder.DialogueText;
 
-                StartCoroutine(TypeWriter(dialogueTxt.text = dialogueHolder.DialogueText));
-                
-                // Deactivate all character animations
+                // off all the animation spines
                 foreach (var character in characterAnimations.Values)
                 {
                     character.gameObject.SetActive(false);
                 }
 
-                // Track active characters
+                // it will track the current character using
                 var activeCharacters = new List<SpineAnimationCharacters>();
 
-                // Activate the current characters' animations and update sprite
+                // set on the current characters' animations and update sprite
                 foreach (var characterAnimation in dialogueHolder.CharacterAnimations)
                 {
                     Debug.Log($"Character: {characterAnimation.Character}"); // Debug log for active characters
 
-                  
                     if (characterAnimations.TryGetValue(characterAnimation.Character, out var skeletonAnimation))
                     {
                         skeletonAnimation.gameObject.SetActive(true);
 
-                        // Try the first animation name, if not found, try the second one
-                        if (!PlayAnimation(skeletonAnimation, "Facial_Expressions/" + characterAnimation.SpineAnimationName, true))
-                        {
-                            PlayAnimation(skeletonAnimation, "expressions/" + characterAnimation.SpineAnimationName, true);
-                        }
+                        // play the neutral/default/ animation first, then the specified animation in a loop
+                        PlayAnimationSequence(skeletonAnimation, characterAnimation.SpineAnimationName);
 
                         activeCharacters.Add(characterAnimation.Character);
                     }
@@ -145,13 +123,11 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
                     }
                 }
 
-                // Update the sprite based on active characters
+                // change the sprite based on active characters
                 UpdateSpritePlaceholder(activeCharacters);
             }
             else
             {
-
-              
                 dialogueContainer.SetActive(false);
                 dialogueTxt.text = "";
                 dialogueIncrement = 0;
@@ -161,22 +137,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         }
         else
         {
-          
             Debug.LogWarning($"No dialogue item found for ID: {p_id}");
-        }
-
-        
-
-    }
-
-    private IEnumerator TypeWriter(string line)
-    {
-        dialogueTxt.text = "";
-        yield return new WaitForSeconds(.5f);
-        foreach (char letter in line.ToCharArray())
-        {
-            dialogueTxt.text += letter;
-            yield return new WaitForSeconds(typingSpeed);
         }
     }
 
@@ -213,7 +174,35 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         }
     }
 
-    private bool PlayAnimation(SkeletonAnimation skeletonAnimation, string animationName, bool isLoop)
+    private void PlayAnimationSequence(SkeletonAnimation skeletonAnimation, string animationName)
+    {
+        var animationNames = new List<string>
+    {
+        "Facial_Expressions/Neutral_Default",
+        "Facial_Expressions/Neutral",
+        "expressions/default",
+        "Facial_Expressions/" + animationName,
+        "expressions/" + animationName
+    };
+
+        StartCoroutine(PlayAnimationsInSequence(skeletonAnimation, animationNames));
+    }
+
+    private IEnumerator PlayAnimationsInSequence(SkeletonAnimation skeletonAnimation, List<string> animationNames)
+    {
+        int index = 0;
+        while (true)
+        {
+            var animationName = animationNames[index];
+            if (TryPlayAnimation(skeletonAnimation, animationName, false))
+            {
+                yield return new WaitForSeconds(skeletonAnimation.AnimationState.GetCurrent(0).Animation.Duration);
+            }
+            index = (index + 1) % animationNames.Count;
+        }
+    }
+
+    private bool TryPlayAnimation(SkeletonAnimation skeletonAnimation, string animationName, bool isLoop)
     {
         var animation = skeletonAnimation.Skeleton.Data.FindAnimation(animationName);
         if (animation != null)
@@ -221,11 +210,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
             skeletonAnimation.state.SetAnimation(0, animationName, isLoop);
             return true;
         }
-        else
-        {
-            Debug.LogWarning($"Animation not found: {animationName}");
-            return false;
-        }
+        return false;
     }
 
     public void NextDialogueBtn()
@@ -252,8 +237,4 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         }
         DisplayDialogueById("stage 1 scene 1");
     }
-
-    
-
-
 }

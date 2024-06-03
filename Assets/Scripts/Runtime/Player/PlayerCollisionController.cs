@@ -33,9 +33,15 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
                         currentCollidedPlatform = platform;
                     }
                 }
-
+                Debug.Log("lumapag na part 1");
                 isLanded = true;
                 platform.CollisionEnterBehaviour(samePlatform);
+
+                if (col.gameObject.CompareTag("Collapsing"))
+                {
+                    CollapsingPlatfrom.Instance.CallCollapsingFunction();
+                    Debug.Log("collapse platform");
+                }
             }
         }
     }
@@ -51,4 +57,5 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
             }
         }
     }
+
 }
