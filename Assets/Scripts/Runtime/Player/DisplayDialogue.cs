@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using Script.Misc;
 using UnityEngine;
 using Spine.Unity;
@@ -19,6 +20,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     [SerializeField] private SkeletonAnimation double_leoExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation double_avaExpresionSpineAnimation;
 
+
     //sprites
     [SerializeField] private Sprite zoeSprite, ethanSprite, leoSprite, avaSprite, echelonSprite, ava_leoSprite, zoe_ethanSprite;
     [SerializeField] private Image spriteOneNamePlaceHolder, spriteTwoNamePlaceHolder;
@@ -32,11 +34,15 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     private bool isOpen;
     public bool IsOpen => isOpen;
 
+    public Animator animator;
+    private float typingSpeed = 0.03f;
+
     private void Awake()
     {
         InitializeCharacterAnimations();
         InitializeCharacterSprites();
 
+       
         if (dialogueIncrement <= 0)
         {
             prevBtn.gameObject.SetActive(false);
@@ -46,9 +52,19 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
 
     public void Open()
     {
+       
         isOpen = true;
         DisplayDialogueById("stage 1 scene 1");
     }
+
+    void Start()
+    {
+        animator.SetBool("IsOpen", true);
+        
+    }
+
+    
+    
 
     private void InitializeCharacterAnimations()
     {
@@ -80,6 +96,8 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         };
     }
 
+   
+
     private void DisplayDialogueById(string p_id)
     {
         dialogueContainer.SetActive(true);
@@ -87,11 +105,13 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
 
         if (dialogueItem != null)
         {
+          
             if (dialogueIncrement >= 0 && dialogueIncrement < dialogueItem.DialogueHolders.Count)
             {
                 var dialogueHolder = dialogueItem.DialogueHolders[dialogueIncrement];
-                dialogueTxt.text = dialogueHolder.DialogueText;
 
+                StartCoroutine(TypeWriter(dialogueTxt.text = dialogueHolder.DialogueText));
+                
                 // Deactivate all character animations
                 foreach (var character in characterAnimations.Values)
                 {
@@ -106,6 +126,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
                 {
                     Debug.Log($"Character: {characterAnimation.Character}"); // Debug log for active characters
 
+                  
                     if (characterAnimations.TryGetValue(characterAnimation.Character, out var skeletonAnimation))
                     {
                         skeletonAnimation.gameObject.SetActive(true);
@@ -129,6 +150,8 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
             }
             else
             {
+
+              
                 dialogueContainer.SetActive(false);
                 dialogueTxt.text = "";
                 dialogueIncrement = 0;
@@ -138,7 +161,22 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         }
         else
         {
+          
             Debug.LogWarning($"No dialogue item found for ID: {p_id}");
+        }
+
+        
+
+    }
+
+    private IEnumerator TypeWriter(string line)
+    {
+        dialogueTxt.text = "";
+        yield return new WaitForSeconds(.5f);
+        foreach (char letter in line.ToCharArray())
+        {
+            dialogueTxt.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
         }
     }
 
@@ -214,4 +252,8 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         }
         DisplayDialogueById("stage 1 scene 1");
     }
+
+    
+
+
 }
