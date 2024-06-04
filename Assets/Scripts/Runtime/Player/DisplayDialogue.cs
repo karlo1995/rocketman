@@ -10,7 +10,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
 {
     [SerializeField] private DialogueItemDetails dialogueItemDetails;
     [SerializeField] private TMP_Text dialogueTxt;
-    [SerializeField] private SkeletonAnimation echelonExpresionSpineAnimation; //as for min-time ill use ethan as ECHELON as placeholder
+    [SerializeField] private SkeletonAnimation echelonExpresionSpineAnimation; // as for min-time ill use ethan as ECHELON as placeholder
     [SerializeField] private SkeletonAnimation zoeExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation ethanExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation leoExpresionSpineAnimation;
@@ -20,11 +20,12 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     [SerializeField] private SkeletonAnimation double_leoExpresionSpineAnimation;
     [SerializeField] private SkeletonAnimation double_avaExpresionSpineAnimation;
 
-    //sprites
+    // sprites
     [SerializeField] private Sprite zoeSprite, ethanSprite, leoSprite, avaSprite, echelonSprite, ava_leoSprite, zoe_ethanSprite;
     [SerializeField] private Image spriteOneNamePlaceHolder, spriteTwoNamePlaceHolder;
     public GameObject dialogueContainer;
-    public Button prevBtn;
+    public Button prevBtn, nextBtn, closeBtn;
+
     private int dialogueIncrement = 0; // can be public parameter in the future
 
     private Dictionary<SpineAnimationCharacters, SkeletonAnimation> characterAnimations;
@@ -125,6 +126,9 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
 
                 // change the sprite based on active characters
                 UpdateSpritePlaceholder(activeCharacters);
+
+                // update button if need to open the X/close btn
+                UpdateButtonVisibility(dialogueItem.DialogueHolders.Count);
             }
             else
             {
@@ -146,14 +150,14 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         if (activeCharacters.Contains(SpineAnimationCharacters.Double_Leo) && activeCharacters.Contains(SpineAnimationCharacters.Ava))
         {
             spriteOneNamePlaceHolder.gameObject.SetActive(false);
-            //changing placeholder for sprite names
+            // changing placeholder for sprite names
             spriteTwoNamePlaceHolder.gameObject.SetActive(true);
             spriteTwoNamePlaceHolder.sprite = ava_leoSprite;
         }
         else if (activeCharacters.Contains(SpineAnimationCharacters.Zoe) && activeCharacters.Contains(SpineAnimationCharacters.Double_Ethan))
         {
             spriteOneNamePlaceHolder.gameObject.SetActive(false);
-            //changing placeholder for sprite names
+            // changing placeholder for sprite names
             spriteTwoNamePlaceHolder.gameObject.SetActive(true);
             spriteTwoNamePlaceHolder.sprite = zoe_ethanSprite;
         }
@@ -177,13 +181,13 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     private void PlayAnimationSequence(SkeletonAnimation skeletonAnimation, string animationName)
     {
         var animationNames = new List<string>
-    {
-        "Facial_Expressions/Neutral_Default",
-        "Facial_Expressions/Neutral",
-        "expressions/default",
-        "Facial_Expressions/" + animationName,
-        "expressions/" + animationName
-    };
+        {
+            "Facial_Expressions/Neutral_Default",
+            "Facial_Expressions/Neutral",
+            "expressions/default",
+            "Facial_Expressions/" + animationName,
+            "expressions/" + animationName
+        };
 
         StartCoroutine(PlayAnimationsInSequence(skeletonAnimation, animationNames));
     }
@@ -216,7 +220,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     public void NextDialogueBtn()
     {
         dialogueIncrement++;
-        if(dialogueIncrement > 0)
+        if (dialogueIncrement > 0)
         {
             prevBtn.gameObject.SetActive(true);
         }
@@ -231,10 +235,24 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
             prevBtn.gameObject.SetActive(false);
             dialogueIncrement = 0;
         }
-        else if(dialogueIncrement > 0)
+        else if (dialogueIncrement > 0)
         {
             prevBtn.gameObject.SetActive(true);
         }
         DisplayDialogueById("stage 1 scene 1");
+    }
+
+    private void UpdateButtonVisibility(int dialogueHolderCount)
+    {
+        if (dialogueIncrement >= dialogueHolderCount - 1)
+        {
+            nextBtn.gameObject.SetActive(false);
+            closeBtn.gameObject.SetActive(true);
+        }
+        else
+        {
+            nextBtn.gameObject.SetActive(true);
+            closeBtn.gameObject.SetActive(false);
+        }
     }
 }
