@@ -18,6 +18,8 @@ namespace Runtime.Levels.Platform_Scripts
         [SerializeField] private Transform midLandingWalkingPosition;
 
         private SpriteRenderer spriteRenderer;
+        private MeshRenderer meshRenderer;
+        
         public int levelPlatform;
         private int spawnedPlatformIndex;
         public int SpawnedPlatformIndex => spawnedPlatformIndex;
@@ -30,7 +32,15 @@ namespace Runtime.Levels.Platform_Scripts
 
         private void Awake()
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            if (gameObject.TryGetComponent(out SpriteRenderer spriteRenderer))
+            {
+                this.spriteRenderer = spriteRenderer;
+            }
+            else if (gameObject.TryGetComponent(out MeshRenderer meshRenderer))
+            {
+                this.meshRenderer = meshRenderer;
+            }
+            
             foreach (var trigger in platformTriggers)
             {
                 trigger.SetActive(false);
@@ -43,7 +53,7 @@ namespace Runtime.Levels.Platform_Scripts
             this.spawnedPlatformIndex = spawnedPlatformIndex;
             this.willTriggerCameraMove = willTriggerCameraMove;
 
-            transform.DOMove(platformPosition, 0f).OnComplete(SpawnPlatform);
+            transform.DOMove(platformPosition, 0f).OnComplete(SpawnPlatform).SetUpdate(true);
 
             foreach (var trigger in platformTriggers)
             {
@@ -54,13 +64,35 @@ namespace Runtime.Levels.Platform_Scripts
         public void RemovePlatform()
         {
             isActive = false;
-            spriteRenderer.DOFade(0f, 0.3f).OnComplete(() => { gameObject.SetActive(false); });
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.DOFade(0f, 0.3f).OnComplete(() => { gameObject.SetActive(false); }).SetUpdate(true);
+            }
+            else if(meshRenderer != null)
+            {
+                gameObject.GetComponent<MeshRenderer>().materials[0].DOFade(1.2f, 0.3f).OnComplete(() => { gameObject.SetActive(false); }).SetUpdate(true);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
 
         private void SpawnPlatform()
         {
             isActive = true;
-            spriteRenderer.DOFade(1f, 0.3f).OnComplete(() => { gameObject.SetActive(true); });
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.DOFade(1f, 0.3f).OnComplete(() => { gameObject.SetActive(true); }).SetUpdate(true);
+            }
+            else if(meshRenderer != null)
+            {
+                gameObject.GetComponent<MeshRenderer>().materials[0].DOFade(1f, 0.3f).OnComplete(() => { gameObject.SetActive(true); }).SetUpdate(true);
+            }
+            else
+            {
+                gameObject.SetActive(true);
+            }
         }
 
         public void CollisionEnterBehaviour(bool isSamePlatformCollided)
