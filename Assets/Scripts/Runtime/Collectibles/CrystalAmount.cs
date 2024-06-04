@@ -10,7 +10,11 @@ public class CrystalAmount : MonoBehaviour
     {
         gameObject.GetComponent<SpriteRenderer>().DOFade(0f, 0.3f).OnComplete(() =>
         {
-            gameObject.SetActive(false);
+            var item = gameObject.GetComponent<CollectibleItem>();
+            var data = item.Data;
+            
+            LevelManager.Instance.AddCollectibleData(data);
+            item.SetActive(false, true);
         });
     }
 }

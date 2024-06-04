@@ -14,7 +14,8 @@ public static class AnimationNames
     public const string BRAKE_ANIMATION_NAME = "hardbreak";
     
     public const string FLOATING_ANIMATION_NAME = "floating";
-    
+    public const string FALLING_ANIMATION_NAME = "falling";
+
     public const string WALK_ANIMATION_NAME = "walk";
 
     public const string LOSING_BALANCE_NAME = "losingbalance";

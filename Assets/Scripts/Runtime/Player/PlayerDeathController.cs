@@ -20,11 +20,7 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
     private void Update()
     {
         if (transform.position.y < failThreshold && !isDropped ||
-            (PlayerTriggerCollisionController.Instance.IsStageCameraActive() &&
-             (transform.position.x > LevelManager.Instance.CurrentPlatform.GetRightmostPlatformDataPosition() ||
-              transform.position.x < LevelManager.Instance.CurrentPlatform.GetLeftmostPlatformDataPosition()
-             )))
-
+            (PlayerTriggerCollisionController.Instance.IsStageCameraActive() && LevelManager.Instance.IsOutsideLevel()))
         {
             isDropped = true;
             livesCount--;

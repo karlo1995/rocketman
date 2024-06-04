@@ -34,6 +34,8 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     private bool isOpen;
     public bool IsOpen => isOpen;
 
+    private float typingSpeed = 0.03f;
+
     private void Awake()
     {
         InitializeCharacterAnimations();
@@ -93,7 +95,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
             if (dialogueIncrement >= 0 && dialogueIncrement < dialogueItem.DialogueHolders.Count)
             {
                 var dialogueHolder = dialogueItem.DialogueHolders[dialogueIncrement];
-                dialogueTxt.text = dialogueHolder.DialogueText;
+                StartCoroutine(TypeWriter(dialogueTxt.text = dialogueHolder.DialogueText));
 
                 // off all the animation spines
                 foreach (var character in characterAnimations.Values)
@@ -144,6 +146,18 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
             Debug.LogWarning($"No dialogue item found for ID: {p_id}");
         }
     }
+
+    private IEnumerator TypeWriter(string line)
+    {
+        dialogueTxt.text = "";
+        yield return new WaitForSeconds(.5f);
+        foreach (char letter in line.ToCharArray())
+        {
+            dialogueTxt.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+    }
+
 
     private void UpdateSpritePlaceholder(List<SpineAnimationCharacters> activeCharacters)
     {

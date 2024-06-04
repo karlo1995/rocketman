@@ -34,6 +34,7 @@ namespace Runtime.Levels
         public PlatformData[] PlatformData;
         public WallData[] WallData;
         public Vector2 CameraPosition;
+        public float CameraZoomAmount;
         public Vector2 CeilingPosition;
         
         public float GetRightmostPlatformDataPosition()
@@ -69,7 +70,7 @@ namespace Runtime.Levels
         public Vector2 GetSpawnPosition()
         {
             var spawnPosition = PlatformData[0].PlatformPosition;
-            spawnPosition = new Vector2(spawnPosition.x - 0.5f, spawnPosition.y + 2f);
+            spawnPosition = new Vector2(spawnPosition.x - 0.3f, spawnPosition.y + 1f);
 
             return spawnPosition;
         }
@@ -77,7 +78,7 @@ namespace Runtime.Levels
         public Vector2 GetLaunchPosition()
         {
             var launchPosition = PlatformData[0].PlatformPosition;
-            launchPosition = new Vector2(launchPosition.x - 0.5f, launchPosition.y - 2f);
+            launchPosition = new Vector2(launchPosition.x - 0.3f, launchPosition.y - 2f);
             
             return launchPosition;
         }

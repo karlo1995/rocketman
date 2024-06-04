@@ -820,7 +820,7 @@ GameObject:
   - component: {fileID: 5647877160071995621}
   m_Layer: 0
   m_Name: Collapsing Platform
-  m_TagString: Collapsing
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -969,7 +969,7 @@ BoxCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: -0.05164957, y: 12.102408}
   m_SpriteTilingProperty:
@@ -1027,6 +1027,7 @@ MonoBehaviour:
   midLandingWalkingPosition: {fileID: 5027831926994353905}
   levelPlatform: 0
   willTriggerCameraMove: 0
+  IsActive: 0
 --- !u!114 &5647877160071995621
 MonoBehaviour:
   m_ObjectHideFlags: 0
