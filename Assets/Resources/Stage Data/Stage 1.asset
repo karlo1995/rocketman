@@ -160,11 +160,11 @@ MonoBehaviour:
         CollectiblePosition: {x: 3.19, y: -0.51}
     WallData:
     - WallId: big_wall_upward
-      WallPosition: {x: -5.29, y: 1.67}
+      WallPosition: {x: -3.44, y: 1.22}
     - WallId: big_wall_upward
-      WallPosition: {x: -3.44, y: 2.38}
+      WallPosition: {x: -5.29, y: 0.72}
     - WallId: big_wall_downward
-      WallPosition: {x: -7.38, y: 4.99}
+      WallPosition: {x: -7.38, y: 6.37}
     CameraPosition: {x: -1.08, y: -0.53}
     CameraZoomAmount: 4
     CeilingPosition: {x: 0, y: 0}
@@ -191,11 +191,11 @@ MonoBehaviour:
         CollectiblePosition: {x: -8.93, y: 3.49}
     WallData:
     - WallId: big_wall_upward
-      WallPosition: {x: -5.29, y: 1.67}
+      WallPosition: {x: -3.44, y: 1.22}
     - WallId: big_wall_upward
-      WallPosition: {x: -3.44, y: 2.38}
+      WallPosition: {x: -5.29, y: 0.72}
     - WallId: big_wall_downward
-      WallPosition: {x: -7.38, y: 4.99}
+      WallPosition: {x: -7.38, y: 6.37}
     CameraPosition: {x: -5.47, y: 2.42}
     CameraZoomAmount: 2.2
     CeilingPosition: {x: 0, y: 0}
