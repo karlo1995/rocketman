@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using Script.Misc;
 using Spine.Unity;
 using UnityEngine;
@@ -9,6 +11,31 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
 
     [SerializeField] private SkeletonAnimation[] thrusterAnimationsHands;
     [SerializeField] private SkeletonAnimation[] thrusterAnimationsFeet;
+/*
+    public GameObject target;
+
+
+    void Update()
+    {
+
+        Vector3 directionToTarget = target.transform.position - transform.position;
+
+        if (spineSkeleton != null)
+        {
+            // Flip the skeleton based on the x direction of the target
+            if (directionToTarget.x < 0)
+            {
+                spineSkeleton.skeleton.ScaleX = Mathf.Abs(spineSkeleton.Skeleton.ScaleX); // Face right
+            }
+            else if (directionToTarget.x > 0)
+            {
+                spineSkeleton.skeleton.ScaleX = -Mathf.Abs(spineSkeleton.Skeleton.ScaleX); // Face left
+
+            }
+
+
+        }
+    }*/
 
     public bool GetPlayerFlipX()
     {
@@ -20,6 +47,8 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
         PlayThrusterAnimation(false, false);
         PlayAnimation(AnimationNames.IDLE_ANIMATION_NAME, true);
     }
+
+  
 
     public void PlayAnimation(string animationName, bool isLoop)
     {
@@ -43,7 +72,7 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
             thrusterFeet.gameObject.SetActive(isThrusting);
         }
     }
-
+    
     public void FlipX(Vector3 position)
     {
         var vel = transform.rotation * position;
