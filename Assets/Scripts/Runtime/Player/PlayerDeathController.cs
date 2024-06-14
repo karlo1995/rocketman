@@ -1,6 +1,7 @@
 using System;
 using Script.Misc;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerDeathController : Singleton<PlayerDeathController>
 {
@@ -19,21 +20,27 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
 
     private void Update()
     {
-        if (transform.position.y < failThreshold && !isDropped ||
-            (PlayerTriggerCollisionController.Instance.IsStageCameraActive() && LevelManager.Instance.IsOutsideLevel()))
+        string currentSceneName = SceneManager.GetActiveScene().name; //added by kylle, it will check the current scene if this function below is needed.
+        //the reason why added here this checker scene because the mechanics of stage level logic is not same for this boss fight so need to adjust some function that has character dependencies
+        if(currentSceneName != "Boss Fight 1")
         {
-            isDropped = true;
-            livesCount--;
-
-            if (livesCount <= 0)
+            if (transform.position.y < failThreshold && !isDropped ||
+            (PlayerTriggerCollisionController.Instance.IsStageCameraActive() && LevelManager.Instance.IsOutsideLevel()))
             {
-            }
+                isDropped = true;
+                livesCount--;
 
-            rigidbody2D.velocity = Vector2.zero;
-            PlayerDragController.Instance.SetResetToLandingSpot(true);
-            PlayerTriggerCollisionController.Instance.ResetCamera();
-            LevelManager.Instance.ResetLevel();
+                if (livesCount <= 0)
+                {
+                }
+
+                rigidbody2D.velocity = Vector2.zero;
+                PlayerDragController.Instance.SetResetToLandingSpot(true);
+                PlayerTriggerCollisionController.Instance.ResetCamera();
+                LevelManager.Instance.ResetLevel();
+            }
         }
+        
     }
 
     public void ResetDropStatus()

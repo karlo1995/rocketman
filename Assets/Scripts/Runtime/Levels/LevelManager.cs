@@ -317,7 +317,7 @@ public class LevelManager : Singleton<LevelManager>
         yield return new WaitForSeconds(2f);
 
         playerController.SetActive(true);
-        playerControllerRigidBody.isKinematic = true;
+        playerControllerRigidBody.isKinematic = false;
 
         var platforms = GetCurrentSpawnedPlatform();
         var spawnPosition = platforms[0].SpawnPosition;
