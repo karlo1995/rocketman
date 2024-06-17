@@ -1,24 +1,19 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Runtime.Levels.Platform_Scripts;
 using UnityEngine;
-using Script.Misc;
 using Spine.Unity;
 
 
 public class CollapsingPlatform : MonoBehaviour
 {
-    [SerializeField] private SkeletonAnimation CollapsingAnimations;
-    [SerializeField] private BoxCollider2D CollapsingCollider2D;
-
     //this is the available animation for collapsing for now..
     private const string crumble_shake_fast = "crumble_shake_fast";
     private const string crumble_shake_fastest = "crumble_shake_fastest";
     private const string crumble_shake_normal = "crumble_shake_normal";
     private const string fallingRocks = "Falling";
     private const string lookLikeNormal = "paused";
-
+    
+    [SerializeField] private SkeletonAnimation CollapsingAnimations;
     private PlatformController platformController;
 
     private void Awake()
@@ -29,6 +24,12 @@ public class CollapsingPlatform : MonoBehaviour
     public void CallCollapsingFunction()
     {
         StartCoroutine(CollapsingPlatformFunction());
+    }
+
+    public void ResetCollapsingPlatform()
+    {
+        PlayAnimation(crumble_shake_normal, true);
+        gameObject.SetActive(true);
     }
 
     private IEnumerator CollapsingPlatformFunction()
@@ -42,7 +43,8 @@ public class CollapsingPlatform : MonoBehaviour
 
         //check if nova nerd still collided with this platform before the collapse started
         //if yes play falling animation
-        if (PlayerCollisionController.Instance.CurrentCollidedPlatform == platformController)
+        if (PlayerCollisionController.Instance.CurrentCollidedPlatform == platformController && 
+            !PlayerDragController.Instance.IsReleased && !PlayerThrustController.Instance.IsThrusting)
         {
             PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FALLING_ANIMATION_NAME, true);
         }

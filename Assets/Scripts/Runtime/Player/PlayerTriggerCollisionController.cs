@@ -1,20 +1,21 @@
+using System.Collections;
 using Runtime.Collectibles;
 using Runtime.Levels.Platform_Scripts;
 using Runtime.Tags;
-using Script.Misc;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerTriggerCollisionController : Singleton<PlayerTriggerCollisionController>
+public class PlayerTriggerCollisionController : Script.Misc.Singleton<PlayerTriggerCollisionController>
 {
     [SerializeField] private GameObject virtualCameraForStage;
     [SerializeField] private GameObject virtualCameraForPlayer;
-    
+
     private void Awake()
     {
         virtualCameraForStage.SetActive(true);
         virtualCameraForPlayer.SetActive(false);
     }
-    
+
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.TryGetComponent(out PlatformLandingTriggerTag _))
@@ -56,6 +57,17 @@ public class PlayerTriggerCollisionController : Singleton<PlayerTriggerCollision
             var crystal = col.gameObject.GetComponent<CrystalAmount>();
             crystal.CollidedToPlayer();
         }
+
+        if (col.gameObject.TryGetComponent(out WallDeathTag wallDeathTag))
+        {
+            var collider = wallDeathTag.ParentBoxCollider;
+            collider.enabled = false;
+            
+            PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
+            PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FALLING_ANIMATION_NAME, true);
+
+            StartCoroutine(ResetWallCollider(collider));
+        }
     }
 
     public bool IsStageCameraActive()
@@ -67,5 +79,11 @@ public class PlayerTriggerCollisionController : Singleton<PlayerTriggerCollision
     {
         virtualCameraForStage.SetActive(true);
         virtualCameraForPlayer.SetActive(false);
+    }
+
+    private IEnumerator ResetWallCollider(BoxCollider2D collider2D)
+    {
+        yield return new WaitForSeconds(2f);
+        collider2D.enabled = true;
     }
 }

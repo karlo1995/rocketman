@@ -72,7 +72,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
         lineRenderer.SetPosition(0, Vector2.zero);
         lineRenderer.SetPosition(1, Vector2.zero);
         lineRenderer.enabled = false;
-        
+
         SetResetToLandingSpot(false);
 
         canDrag = false;
@@ -81,7 +81,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     private void Update()
     {
-        if (!DisplayDialogue.Instance.IsOpen)
+        if (!DisplayDialogue.Instance.IsOpen && !LevelManager.Instance.IsTransitioning)
         {
             if (canDrag)
             {
@@ -168,7 +168,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
         ///check if dragging is outside the line bounds angle
         var angle = Mathf.Atan2(trajectoryDistance.y, trajectoryDistance.x) * Mathf.Rad2Deg;
-        if (angle < -175f || angle > 5f)
+        if (angle > 0f && angle != 0f)
         {
             isDragging = false;
             lineRenderer.enabled = false;
@@ -185,6 +185,8 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     private void DragEnd()
     {
+        return;
+
         isDragging = false;
         lineRenderer.enabled = false;
 
@@ -201,14 +203,14 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
             if (distance.magnitude >= 2.5f)
             {
-                Invoke(nameof(PlayThruster), 0.5f);
+                Invoke(nameof(PlayThruster), 0.2f);
                 PlayerAnimationController.Instance.PlayAnimation(AnimationNames.HARD_LAUNCH_ANIMATION_NAME, false);
             }
             else
             {
                 rigidbody2D.velocity = Vector2.zero;
 
-                Invoke(nameof(PlayThruster), 0.5f);
+                Invoke(nameof(PlayThruster), 0.2f);
                 PlayerAnimationController.Instance.PlayAnimation(AnimationNames.SOFT_LAUNCH_ANIMATION_NAME, false);
             }
         }
@@ -221,7 +223,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
             PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
             PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
         }
-        
+
 
         rigidbody2D.AddForce(-finalForce, ForceMode2D.Impulse);
         isReleased = true;

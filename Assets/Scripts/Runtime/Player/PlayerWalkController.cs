@@ -33,7 +33,8 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
         yield return new WaitForSeconds(distance);
         if (midPosition != null)
         {
-            PlayerAnimationController.Instance.FlipX(transform.position - midPosition.transform.position);
+            PlayerAnimationController.Instance.ByRotationPlayerFlipX(transform.position - midPosition.transform.position);
+            PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
             PlayerAnimationController.Instance.PlayAnimation(AnimationNames.WALK_ANIMATION_NAME, true);
             transform.DOMoveX(midPosition.position.x, 0.5f).OnComplete(() =>
             {
@@ -52,7 +53,8 @@ public class PlayerWalkController : Singleton<PlayerWalkController>
 
             if (midPosition != null)
             {
-                PlayerAnimationController.Instance.FlipX(midPosition.transform.position - transform.position);
+                PlayerAnimationController.Instance.ByRotationPlayerFlipX(midPosition.transform.position - transform.position);
+                PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
                 PlayerAnimationController.Instance.PlayAnimation(AnimationNames.LOSING_BALANCE_NAME, false);
 
                 yield return new WaitForSeconds(0.2f);

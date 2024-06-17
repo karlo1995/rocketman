@@ -47,9 +47,7 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
         PlayThrusterAnimation(false, false);
         PlayAnimation(AnimationNames.IDLE_ANIMATION_NAME, true);
     }
-
-  
-
+    
     public void PlayAnimation(string animationName, bool isLoop)
     {
         animationName = "Main_Animations/" + animationName;
@@ -73,7 +71,7 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
         }
     }
     
-    public void FlipX(Vector3 position)
+    public void ByRotationPlayerFlipX(Vector3 position)
     {
         var vel = transform.rotation * position;
 
@@ -83,5 +81,10 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
             < 0 => true,
             _ => spineSkeleton.skeleton.FlipX
         };
+    }
+    
+    public void ByPositionPlayerFlipX(Vector3 position)
+    {
+        spineSkeleton.skeleton.FlipX = transform.position.x < position.x;
     }
 }

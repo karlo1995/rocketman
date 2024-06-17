@@ -20,16 +20,17 @@ namespace Runtime.Levels.Platform_Scripts
         private SpriteRenderer spriteRenderer;
         private MeshRenderer meshRenderer;
         
-        public int levelPlatform;
-        private int spawnedPlatformIndex;
-        public int SpawnedPlatformIndex => spawnedPlatformIndex;
-
         private bool isSamePlatformCollided;
-        public bool willTriggerCameraMove;
-
         private bool isActive;
-        public bool IsActive;
 
+        private TestPlatformData currentTestPlatformData;
+        
+        private bool isCollapsingPlatform;
+        public bool IsCollapsingPlatform => isCollapsingPlatform;
+
+        private CollapsingPlatform collapsingPlatform;
+        public CollapsingPlatform CollapsingPlatform => collapsingPlatform;
+        
         private void Awake()
         {
             if (gameObject.TryGetComponent(out SpriteRenderer spriteRenderer))
@@ -41,24 +42,43 @@ namespace Runtime.Levels.Platform_Scripts
                 this.meshRenderer = meshRenderer;
             }
             
+            //check if platform is collapsing platform
+            if (gameObject.TryGetComponent(out CollapsingPlatform collapsingPlatform))
+            {
+                isCollapsingPlatform = true;
+                this.collapsingPlatform = collapsingPlatform;
+            }
+
             foreach (var trigger in platformTriggers)
             {
                 trigger.SetActive(false);
             }
         }
 
-        public void InitPlatform(Vector2 platformPosition, int levelPlatform, int spawnedPlatformIndex, bool willTriggerCameraMove)
+        public void InitPlatform(TestPlatformData currentTestPlatformData)
         {
-            this.levelPlatform = levelPlatform;
-            this.spawnedPlatformIndex = spawnedPlatformIndex;
-            this.willTriggerCameraMove = willTriggerCameraMove;
-
-            transform.DOMove(platformPosition, 0f).OnComplete(SpawnPlatform).SetUpdate(true);
-
+            this.currentTestPlatformData = currentTestPlatformData;
+            transform.DOMove(currentTestPlatformData.PlatformPosition, 0f).OnComplete(SpawnPlatform).SetUpdate(true);
+            
             foreach (var trigger in platformTriggers)
             {
                 trigger.SetActive(true);
             }
+        }
+
+        public string GetCameraIdToUse()
+        {
+            return currentTestPlatformData.CameraIdToUse;
+        }
+
+        public Vector2 GetSpawnPosition()
+        {
+            return currentTestPlatformData.GetSpawnPosition();
+        }
+        
+        public Vector2 GetLaunchPosition()
+        {
+            return currentTestPlatformData.GetLaunchPosition();
         }
 
         public void RemovePlatform()
@@ -87,7 +107,19 @@ namespace Runtime.Levels.Platform_Scripts
             }
             else if(meshRenderer != null)
             {
-                gameObject.GetComponent<MeshRenderer>().materials[0].DOFade(1f, 0.3f).OnComplete(() => { gameObject.SetActive(true); }).SetUpdate(true);
+                gameObject.GetComponent<MeshRenderer>().materials[0].DOFade(1f, 0.3f).OnComplete(() =>
+                {
+                    gameObject.SetActive(true); 
+                    
+                    //check if platform is collapsing platform
+                    if (isCollapsingPlatform)
+                    {
+                        if (gameObject.TryGetComponent(out CollapsingPlatform collapsingPlatform))
+                        {
+                            collapsingPlatform.ResetCollapsingPlatform();
+                        }
+                    }
+                }).SetUpdate(true);
             }
             else
             {
@@ -99,6 +131,8 @@ namespace Runtime.Levels.Platform_Scripts
         {
             this.isSamePlatformCollided = isSamePlatformCollided;
 
+            Debug.Log("Landed player 2: " + isSamePlatformCollided);
+ 
             foreach (var trigger in platformTriggers)
             {
                 trigger.SetActive(false);
@@ -126,7 +160,6 @@ namespace Runtime.Levels.Platform_Scripts
         public void CollisionExitBehaviour()
         {
             PlayerDragController.Instance.AddPlatformControllerToCheck(this);
-            ResetLevelPlatform();
         }
 
         public void OpenAnimationTriggers()
@@ -149,15 +182,16 @@ namespace Runtime.Levels.Platform_Scripts
             return false;
         }
 
-        private void ResetLevelPlatform()
-        {
-            LevelManager.Instance.SetPlatformToRemove(this);
-        }
-
         private void SpawnNextPlatform()
         {
             PlayerAnimationController.Instance.PlayAnimation(AnimationNames.IDLE_ANIMATION_NAME, true);
             PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
+
+            if (isCollapsingPlatform)
+            {
+                collapsingPlatform.CallCollapsingFunction();
+            }
+            
             StartCoroutine(StartSpawningPlatformCountdown());
 
             PlayerDragController.Instance.SetCanDrag();
@@ -167,8 +201,8 @@ namespace Runtime.Levels.Platform_Scripts
         {
             if (!isSamePlatformCollided)
             {
-                yield return new WaitForSeconds(1f);
-                LevelManager.Instance.SpawnNextPlatform(willTriggerCameraMove);
+                yield return new WaitForSeconds(0.3f);
+                LevelManager.Instance.SpawnNextPlatform(this);
             }
         }
     }

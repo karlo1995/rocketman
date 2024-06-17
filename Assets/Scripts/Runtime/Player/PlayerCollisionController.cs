@@ -18,7 +18,9 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
         {
             if (col.gameObject.TryGetComponent(out PlatformController platform))
             {
+                Debug.Log("Landed player");
                 var samePlatform = false;
+                
                 if (currentCollidedPlatform == null)
                 {
                     currentCollidedPlatform = platform;
@@ -36,15 +38,14 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
                 }
                 
                 isLanded = true;
+
+                if (LevelManager.Instance.LevelCount < 2)
+                {
+                    samePlatform = false;
+                }
+                
                 platform.CollisionEnterBehaviour(samePlatform);
-
-                //made by kylle
-                // if (col.gameObject.CompareTag("Collapsing"))
-                // {
-                //     CollapsingPlatform.Instance.CallCollapsingFunction();
-                //     Debug.Log("collapse platform");
-                // }
-
+                
                 //modified by karlo
                 if (col.gameObject.TryGetComponent(out CollapsingPlatform collapsingPlatform))
                 {
@@ -53,14 +54,14 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
                 
                 if (col.gameObject.TryGetComponent(out WallTag _))
                 {
-                    // Magnitude of the velocity vector is speed of the object (we will use it for constant speed so object never stop)
-                    var speed = rigidbody2D.velocity.magnitude;
- 
-                    // Reflect params must be normalized so we get new direction
-                    var direction = Vector3.Reflect(rigidbody2D.velocity.normalized, col.contacts[0].normal);
- 
-                    // Like earlier wrote: velocity vector is magnitude (speed) and direction (a new one)
-                    rigidbody2D.velocity = direction * speed * 2f;
+                    // // Magnitude of the velocity vector is speed of the object (we will use it for constant speed so object never stop)
+                    // var speed = rigidbody2D.velocity.magnitude;
+                    //
+                    // // Reflect params must be normalized so we get new direction
+                    // var direction = Vector3.Reflect(rigidbody2D.velocity.normalized, col.contacts[0].normal);
+                    //
+                    // // Like earlier wrote: velocity vector is magnitude (speed) and direction (a new one)
+                    // rigidbody2D.velocity = direction * speed * 2f;
                 }
             }
         }
@@ -78,18 +79,8 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        // if (col.TryGetComponent(out WallTag _))
-        // {
-        //     // Magnitude of the velocity vector is speed of the object (we will use it for constant speed so object never stop)
-        //     var speed = rigidbody2D.velocity.magnitude;
-        //
-        //     // Reflect params must be normalized so we get new direction
-        //     var direction = Vector3.Reflect(rigidbody2D.velocity.normalized, col.GetComponent<Collision2D>().contacts[0].normal);
-        //
-        //     // Like earlier wrote: velocity vector is magnitude (speed) and direction (a new one)
-        //     rigidbody2D.velocity = direction * speed;
-        // }
-    }
+    // private void OnTriggerEnter2D(Collider2D col)
+    // {
+    //
+    // }
 }

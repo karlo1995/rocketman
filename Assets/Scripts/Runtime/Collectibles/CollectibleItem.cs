@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CollectibleItem : MonoBehaviour
 {
-    private CollectibleData data;
-    public CollectibleData Data => data;
+    private TestCollectibleData data;
+    public TestCollectibleData Data => data;
 
     private void Awake()
     {
@@ -13,7 +13,7 @@ public class CollectibleItem : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Init(CollectibleData data)
+    public void Init(TestCollectibleData data)
     {
         this.data = data;
         SetActive(true);
