@@ -35,7 +35,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
     public bool IsOpen => isOpen;
 
     private float typingSpeed = 0.03f;
-
+  
     private void Awake()
     {
         InitializeCharacterAnimations();
@@ -89,7 +89,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
         StopAllCoroutines();
         dialogueContainer.SetActive(true);
         var dialogueItem = dialogueItemDetails.GetDialogueItemById(p_id);
-
+        dialogueTxt.fontSize = 46;
         if (dialogueItem != null)
         {
             if (dialogueIncrement >= 0 && dialogueIncrement < dialogueItem.DialogueHolders.Count)
@@ -117,7 +117,7 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
 
                         // play the neutral/default/ animation first, then the specified animation in a loop
                         PlayAnimationSequence(skeletonAnimation, characterAnimation.SpineAnimationName);
-
+                      
                         activeCharacters.Add(characterAnimation.Character);
                     }
                     else
