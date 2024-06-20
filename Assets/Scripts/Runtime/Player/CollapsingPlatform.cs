@@ -12,9 +12,13 @@ public class CollapsingPlatform : MonoBehaviour
     private const string crumble_shake_normal = "crumble_shake_normal";
     private const string fallingRocks = "Falling";
     private const string lookLikeNormal = "paused";
-    
+
     [SerializeField] private SkeletonAnimation CollapsingAnimations;
     private PlatformController platformController;
+    private bool isReset;
+    
+    private IEnumerator collapsingCoroutine;
+
 
     private void Awake()
     {
@@ -23,35 +27,40 @@ public class CollapsingPlatform : MonoBehaviour
 
     public void CallCollapsingFunction()
     {
-        StartCoroutine(CollapsingPlatformFunction());
+        collapsingCoroutine = CollapsingPlatformFunction();
+        StartCoroutine(collapsingCoroutine);
     }
 
     public void ResetCollapsingPlatform()
     {
+        StopCoroutine(collapsingCoroutine);
+        collapsingCoroutine = null;
+        
+        Debug.Log("Collapsing true!");
+        CollapsingAnimations.gameObject.SetActive(true);
         PlayAnimation(crumble_shake_normal, true);
-        gameObject.SetActive(true);
     }
 
     private IEnumerator CollapsingPlatformFunction()
     {
         PlayAnimation(crumble_shake_fastest, true);
-
         yield return new WaitForSeconds(5f);
+        
         PlayAnimation(fallingRocks, false);
         yield return new WaitForSeconds(1.2f);
+        
         PlayAnimation(lookLikeNormal, true);
 
         //check if nova nerd still collided with this platform before the collapse started
         //if yes play falling animation
-        if (PlayerCollisionController.Instance.CurrentCollidedPlatform == platformController && 
+        if (PlayerCollisionController.Instance.CurrentCollidedPlatform == platformController &&
             !PlayerDragController.Instance.IsReleased && !PlayerThrustController.Instance.IsThrusting)
         {
             PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FALLING_ANIMATION_NAME, true);
         }
-        
+
+        Debug.Log("Collapsing false!");
         CollapsingAnimations.gameObject.SetActive(false);
-        yield return new WaitForSeconds(1f);
-        CollapsingAnimations.gameObject.SetActive(true);
     }
 
     private void PlayAnimation(string animationName, bool isLoop)

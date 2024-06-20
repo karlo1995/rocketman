@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Boss Scene.unity
     guid: 42c521ae34b839b40b68eec332edd05f
+  - enabled: 1
+    path: Assets/Scenes/Boss Fight 1.unity
+    guid: 77d80332ab86c4eb3916ca983c53d559
+  - enabled: 1
+    path: Assets/Scenes/Minigame.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 3accb040b61a18f498f15b7768f700f9, type: 2}
     com.unity.localization.settings: {fileID: 11400000, guid: 5cd040a2d94a2a042b72ef5e98230c35, type: 2}

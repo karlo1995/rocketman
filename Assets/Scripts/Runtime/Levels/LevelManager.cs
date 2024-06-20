@@ -26,7 +26,6 @@ public class LevelManager : Singleton<LevelManager>
     [ShowInInspector] private List<TestCollectibleData> collectedCollectibleData = new();
     [ShowInInspector] private List<SpriteRenderer> currentlySpawnedWalls = new();
 
-
     [ShowInInspector] private readonly Dictionary<string, List<GameObject>> prefabPool = new();
 
     [ShowInInspector] private int levelCount;
@@ -34,10 +33,17 @@ public class LevelManager : Singleton<LevelManager>
 
     [ShowInInspector] private readonly Dictionary<string, Transform> cameraPositions = new();
     [ShowInInspector] private readonly Dictionary<string, SpriteRenderer> wallsToSpawn = new();
+    public Dictionary<string, SpriteRenderer> WallToSpawn => wallsToSpawn;
 
     [ShowInInspector] private PlatformController currentLandingPlatform;
     [ShowInInspector] private PlatformController currentTargetPlatform;
 
+    public PlatformController CurrentLandingPlatform => currentLandingPlatform;
+    public PlatformController CurrentTargetPlatform => currentTargetPlatform;
+
+    private Transform highestCeilingPlatform;
+    public Transform HighestCeilingPlatform => highestCeilingPlatform;
+    
     private int platformSpawnCounter;
     private int collectibleSpawnCounter;
 
@@ -215,16 +221,19 @@ public class LevelManager : Singleton<LevelManager>
         SpawnCameraPositions();
         SpawnWall();
 
-        //spawn the first platform
-        SpawnPlatforms();
+        //Open Dialogue
+        DisplayDialogue.Instance.Open();
+    }
 
+    public void SpawnPlayerAtTheStartOfTheGame()
+    {
         //spawn player
         StartCoroutine(SpawnPlayer());
     }
 
     private IEnumerator SpawnPlayer()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.3f);
 
         playerController.SetActive(true);
         playerControllerRigidBody.isKinematic = false;
@@ -236,6 +245,12 @@ public class LevelManager : Singleton<LevelManager>
         PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
         PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
 
+        //play initial dialogue
+        playerDragController.SetActive(true);
+
+        //spawn the first platform
+        SpawnPlatforms();
+
         //move the player controller in the spawn point platform
         playerController.transform.DOMove(launchPosition, 0f).OnComplete(() =>
         {
@@ -245,10 +260,6 @@ public class LevelManager : Singleton<LevelManager>
                 PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
 
                 StartCoroutine(FallAnimationPlayer());
-
-                //play initial dialogue
-                playerDragController.SetActive(true);
-                DisplayDialogue.Instance.Open();
             });
         });
     }
@@ -257,6 +268,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         yield return new WaitForSeconds(0.5f);
         playerControllerRigidBody.isKinematic = false;
+        playerControllerRigidBody.velocity = Vector2.zero;
     }
 
     private void SpawnCameraPositions()
@@ -371,6 +383,8 @@ public class LevelManager : Singleton<LevelManager>
                         //set is transitioning true to tell to others that camera is currently changing its follow
                         isTransitioning = true;
                         cmVirtualCamera.Follow = cameraPositions[platformDetails.CameraIdToUse];
+                        
+                        GameCameraController.Instance.SetHighestCeilingPositionInY();
 
                         //reset transitioning status
                         StartCoroutine(ResetTransitioningStatus());
@@ -379,6 +393,16 @@ public class LevelManager : Singleton<LevelManager>
 
                 //set current target platform 
                 currentTargetPlatform = platform;
+
+                //get highest ceiling platform
+                if (currentTargetPlatform.transform.position.y > currentLandingPlatform.transform.position.y)
+                {
+                    highestCeilingPlatform = currentTargetPlatform.transform;
+                }
+                else
+                {
+                    highestCeilingPlatform = currentLandingPlatform.transform;
+                }
 
                 //adjust camera zoom 
                 cmVirtualCamera.m_Lens.OrthographicSize = platformDetails.CameraZoomValue;
@@ -447,10 +471,16 @@ public class LevelManager : Singleton<LevelManager>
         }
 
         currentLandingPlatform = platformController;
+
         SpawnPlatforms();
     }
 
     public void ResetLevel()
+    {
+        StartCoroutine(ResetLevelCoroutine());
+    }
+
+    private IEnumerator ResetLevelCoroutine()
     {
         playerControllerRigidBody.isKinematic = true;
         var spawnPosition = currentLandingPlatform.GetSpawnPosition();
@@ -469,17 +499,25 @@ public class LevelManager : Singleton<LevelManager>
         PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FLOATING_ANIMATION_NAME, true);
         PlayerAnimationController.Instance.PlayThrusterAnimation(true, false);
 
+        //check if reset platform is collapsing platform
+        if (currentLandingPlatform.IsCollapsingPlatform)
+        {
+            while (!currentLandingPlatform.CollapsingPlatform.gameObject.activeInHierarchy)
+            {
+                yield return null;
+            }
+        }
+        
         //move the player controller in the spawn point platform
         playerController.transform.DOMove(launchPosition, 0f).OnComplete(() =>
         {
             //flip player controller based on where the next platform is
             PlayerAnimationController.Instance.ByPositionPlayerFlipX(currentTargetPlatform.transform.position);
-
+            
             playerController.transform.DOMove(spawnPosition, 0.5f).OnComplete(() =>
             {
                 PlayerAnimationController.Instance.PlayAnimation(AnimationNames.BRAKE_ANIMATION_NAME, false);
                 PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
-
                 StartCoroutine(FallAnimationPlayer());
             });
         });

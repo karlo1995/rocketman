@@ -18,4 +18,9 @@ public class SceneController : Singleton<SceneController>
     {
         Application.Quit();
     }
+
+    public void OpenMinigame()
+    {
+        SceneManager.LoadScene("Minigame");
+    }
 }

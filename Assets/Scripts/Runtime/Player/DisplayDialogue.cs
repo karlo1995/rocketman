@@ -139,6 +139,8 @@ public class DisplayDialogue : Singleton<DisplayDialogue>
                 dialogueIncrement = 0;
 
                 isOpen = false;
+
+                LevelManager.Instance.SpawnPlayerAtTheStartOfTheGame();
             }
         }
         else

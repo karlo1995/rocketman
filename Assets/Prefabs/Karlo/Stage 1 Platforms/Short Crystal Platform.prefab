@@ -182,9 +182,6 @@ MonoBehaviour:
   - {fileID: 1090807546665790336}
   midLandingPosition: {fileID: 3913950107656542629}
   midLandingWalkingPosition: {fileID: 4773510033675737347}
-  levelPlatform: 0
-  willTriggerCameraMove: 0
-  IsActive: 0
 --- !u!1 &1048447461246903146
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,6 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2b19aeaa8d6d14696ab124441b0717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLeftEdge: 0
 --- !u!1 &1668768153374477124
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,6 +637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2b19aeaa8d6d14696ab124441b0717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLeftEdge: 1
 --- !u!1 &1851857028436513787
 GameObject:
   m_ObjectHideFlags: 0

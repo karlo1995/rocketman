@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6840531102848134963}
   - component: {fileID: 4895000531267410129}
   - component: {fileID: 1736194899718302239}
+  - component: {fileID: 5586383801046818375}
   m_Layer: 0
   m_Name: Big Downward Wall
   m_TagString: Untagged
@@ -94,7 +95,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 3282127253230189549}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 42fcc9e49a9f2ca449a9945bb6434bf9, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -114,7 +115,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.017842293, y: -0.11846042}
@@ -130,3 +131,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2246592, y: 12.555523}
   m_EdgeRadius: 0
+--- !u!114 &5586383801046818375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3282127253230189549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88b021469a384374686158ca48b0c102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

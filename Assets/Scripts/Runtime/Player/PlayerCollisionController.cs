@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class PlayerCollisionController : Singleton<PlayerCollisionController>
 {
-    public bool isLanded;
+    [SerializeField] private Rigidbody2D rigidbody2D;
+    
+    private bool isLanded;
     public bool IsLanded => isLanded;
 
     private PlatformController currentCollidedPlatform;
     public PlatformController CurrentCollidedPlatform => currentCollidedPlatform;
-    
-    [SerializeField] private Rigidbody2D rigidbody2D;
+
+    private bool isBouncedToWall;
     
     private void OnCollisionEnter2D(Collision2D col)
     {
@@ -20,7 +22,7 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
             {
                 Debug.Log("Landed player");
                 var samePlatform = false;
-                
+
                 if (currentCollidedPlatform == null)
                 {
                     currentCollidedPlatform = platform;
@@ -36,32 +38,38 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
                         currentCollidedPlatform = platform;
                     }
                 }
-                
-                isLanded = true;
 
-                if (LevelManager.Instance.LevelCount < 2)
+                isLanded = true;
+                
+                //reset wall colliders
+                if (isBouncedToWall)
                 {
-                    samePlatform = false;
+                    isBouncedToWall = false;
+                    foreach (var wall in LevelManager.Instance.WallToSpawn)
+                    {
+                        wall.Value.GetComponent<BoxCollider2D>().isTrigger = true;
+                    }
                 }
-                
+
+                //TODO: band aid fix need to change please!!
+                if (LevelManager.Instance != null)
+                {
+                    if (LevelManager.Instance.LevelCount < 2)
+                    {
+                        samePlatform = false;
+                    }
+                }
+                else
+                {
+                    PlayerDragController.Instance.SetCanDrag();
+                }
+
                 platform.CollisionEnterBehaviour(samePlatform);
-                
+
                 //modified by karlo
                 if (col.gameObject.TryGetComponent(out CollapsingPlatform collapsingPlatform))
                 {
                     collapsingPlatform.CallCollapsingFunction();
-                }
-                
-                if (col.gameObject.TryGetComponent(out WallTag _))
-                {
-                    // // Magnitude of the velocity vector is speed of the object (we will use it for constant speed so object never stop)
-                    // var speed = rigidbody2D.velocity.magnitude;
-                    //
-                    // // Reflect params must be normalized so we get new direction
-                    // var direction = Vector3.Reflect(rigidbody2D.velocity.normalized, col.contacts[0].normal);
-                    //
-                    // // Like earlier wrote: velocity vector is magnitude (speed) and direction (a new one)
-                    // rigidbody2D.velocity = direction * speed * 2f;
                 }
             }
         }
@@ -79,8 +87,21 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
         }
     }
 
-    // private void OnTriggerEnter2D(Collider2D col)
-    // {
-    //
-    // }
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.TryGetComponent(out WallTag _))
+        {
+            // add a bounce effect when colliding to a wall
+            isBouncedToWall = true;
+            
+            rigidbody2D.velocity = Vector3.zero;
+            rigidbody2D.AddForce(PlayerAnimationController.Instance.GetPlayerFlipX() ? 
+                new Vector2(-150f, 0f) : new Vector2(150f, 0f), ForceMode2D.Force);
+
+            foreach (var wall in LevelManager.Instance.WallToSpawn)
+            {
+                wall.Value.GetComponent<BoxCollider2D>().isTrigger = false;
+            }
+        }
+    }
 }

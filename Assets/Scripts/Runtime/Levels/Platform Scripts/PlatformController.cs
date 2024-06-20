@@ -130,9 +130,7 @@ namespace Runtime.Levels.Platform_Scripts
         public void CollisionEnterBehaviour(bool isSamePlatformCollided)
         {
             this.isSamePlatformCollided = isSamePlatformCollided;
-
-            Debug.Log("Landed player 2: " + isSamePlatformCollided);
- 
+            
             foreach (var trigger in platformTriggers)
             {
                 trigger.SetActive(false);

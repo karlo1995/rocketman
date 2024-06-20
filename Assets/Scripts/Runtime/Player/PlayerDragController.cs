@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Runtime.Levels.Platform_Scripts;
 using Script.Misc;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerDragController : Singleton<PlayerDragController>
 {
@@ -18,7 +19,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
     private Camera mainCamera;
 
     private bool isDragging;
-    private bool canDrag;
+    public bool canDrag;
 
     private Vector2 finalForce;
 
@@ -81,18 +82,41 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     private void Update()
     {
-        if (!DisplayDialogue.Instance.IsOpen && !LevelManager.Instance.IsTransitioning)
+        //TODO: band aid fix need to change please!!
+        var currentSceneName = SceneManager.GetActiveScene().name; //added by kylle, it will check the current scene if this function below is needed.
+        if(currentSceneName != "Boss Fight 1")
         {
-            if (canDrag)
+            if (!DisplayDialogue.Instance.IsOpen && !LevelManager.Instance.IsTransitioning)
             {
-                if (Input.GetMouseButtonDown(0) && !isDragging)
+                if (canDrag)
                 {
-                    DragStart();
-                }
+                    if (Input.GetMouseButtonDown(0) && !isDragging)
+                    {
+                        DragStart();
+                    }
 
-                if (isDragging)
+                    if (isDragging)
+                    {
+                        Drag();
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (!DisplayDialogue.Instance.IsOpen)
+            {
+                if (canDrag)
                 {
-                    Drag();
+                    if (Input.GetMouseButtonDown(0) && !isDragging)
+                    {
+                        DragStart();
+                    }
+
+                    if (isDragging)
+                    {
+                        Drag();
+                    }
                 }
             }
         }
@@ -185,8 +209,6 @@ public class PlayerDragController : Singleton<PlayerDragController>
 
     private void DragEnd()
     {
-        return;
-
         isDragging = false;
         lineRenderer.enabled = false;
 

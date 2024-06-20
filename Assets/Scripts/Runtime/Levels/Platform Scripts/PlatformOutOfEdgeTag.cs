@@ -4,16 +4,7 @@ namespace Runtime.Levels.Platform_Scripts
 {
     public class PlatformOutOfEdgeTag : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        [SerializeField] private bool isLeftEdge;
+        public bool IsLeftEdge => isLeftEdge;
     }
 }

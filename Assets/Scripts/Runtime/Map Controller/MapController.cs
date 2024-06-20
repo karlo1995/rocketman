@@ -32,7 +32,7 @@ namespace Runtime.Map_Controller
             {
                 Debug.Log("2");
 
-                SceneManager.LoadScene(2);
+                SceneManager.LoadScene(4);
             }
             else if (LevelManager.Instance.IsNextStageBoss())
             {

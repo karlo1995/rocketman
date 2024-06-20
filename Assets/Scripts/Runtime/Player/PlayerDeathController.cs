@@ -1,6 +1,7 @@
 using System;
 using Script.Misc;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerDeathController : Singleton<PlayerDeathController>
 {
@@ -24,24 +25,29 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
 
     private void Update()
     {
-        if (!LevelManager.Instance.IsTransitioning)
+        //TODO: band aid fix need to change please!!
+        string currentSceneName = SceneManager.GetActiveScene().name; //added by kylle, it will check the current scene if this function below is needed.
+        if(currentSceneName != "Boss Fight 1")
         {
-            if (isForceDeath || 
-                transform.position.y < failThreshold && !isDropped || 
-                (PlayerTriggerCollisionController.Instance.IsStageCameraActive() && IsOutsideLevel()))
+            if (!DisplayDialogue.Instance.IsOpen && !LevelManager.Instance.IsTransitioning)
             {
-                isForceDeath = false;
-                isDropped = true;
-                livesCount--;
-
-                if (livesCount <= 0)
+                if (isForceDeath ||
+                    transform.position.y < failThreshold && !isDropped ||
+                    (PlayerTriggerCollisionController.Instance.IsStageCameraActive() && IsOutsideLevel()))
                 {
-                }
+                    isForceDeath = false;
+                    isDropped = true;
+                    livesCount--;
 
-                rigidbody2D.velocity = Vector2.zero;
-                PlayerDragController.Instance.SetResetToLandingSpot(true);
-                PlayerTriggerCollisionController.Instance.ResetCamera();
-                LevelManager.Instance.ResetLevel();
+                    if (livesCount <= 0)
+                    {
+                    }
+
+                    rigidbody2D.velocity = Vector2.zero;
+                    PlayerDragController.Instance.SetResetToLandingSpot(true);
+                    PlayerTriggerCollisionController.Instance.ResetCamera();
+                    LevelManager.Instance.ResetLevel();
+                }
             }
         }
     }

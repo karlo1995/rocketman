@@ -628,6 +628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2b19aeaa8d6d14696ab124441b0717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLeftEdge: 1
 --- !u!1 &6509537562022550658
 GameObject:
   m_ObjectHideFlags: 0
@@ -1025,9 +1026,6 @@ MonoBehaviour:
   - {fileID: 9203679264012102578}
   midLandingPosition: {fileID: 7510207275491601085}
   midLandingWalkingPosition: {fileID: 5027831926994353905}
-  levelPlatform: 0
-  willTriggerCameraMove: 0
-  IsActive: 0
 --- !u!114 &5647877160071995621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1041,7 +1039,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CollapsingAnimations: {fileID: 1866844378430800919}
-  CollapsingCollider2D: {fileID: 764926939242184791}
 --- !u!1 &9203679264012102578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,3 +1182,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2b19aeaa8d6d14696ab124441b0717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLeftEdge: 0

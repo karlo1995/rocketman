@@ -4,6 +4,7 @@ using Runtime.Levels.Platform_Scripts;
 using Runtime.Tags;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerTriggerCollisionController : Script.Misc.Singleton<PlayerTriggerCollisionController>
 {
@@ -12,8 +13,18 @@ public class PlayerTriggerCollisionController : Script.Misc.Singleton<PlayerTrig
 
     private void Awake()
     {
-        virtualCameraForStage.SetActive(true);
-        virtualCameraForPlayer.SetActive(false);
+        //TODO: band aid fix need to change please!!
+        var currentSceneName = SceneManager.GetActiveScene().name; //added by kylle, it will check the current scene if this function below is needed.
+        if (currentSceneName == "Boss Fight 1")
+        {
+            virtualCameraForStage.SetActive(false);
+            virtualCameraForPlayer.SetActive(true);
+        }
+        else
+        {
+            virtualCameraForStage.SetActive(true);
+            virtualCameraForPlayer.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -24,14 +35,21 @@ public class PlayerTriggerCollisionController : Script.Misc.Singleton<PlayerTrig
             PlayerAnimationController.Instance.PlayAnimation(AnimationNames.MED_LANDING_ANIMATION_NAME, false);
         }
 
-        if (col.gameObject.TryGetComponent(out PlatformOutOfEdgeTag _))
+        if (col.gameObject.TryGetComponent(out PlatformOutOfEdgeTag edgeTag))
         {
             PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
-            PlayerWalkController.Instance.SetDelayCauseOfLosingBalance(1f);
+            PlayerWalkController.Instance.SetDelayCauseOfLosingBalance(edgeTag.IsLeftEdge);
         }
 
         if (col.gameObject.TryGetComponent(out PlatformCeilingTag _))
         {
+            //TODO: band aid fix need to change please!!
+            var currentSceneName = SceneManager.GetActiveScene().name; //added by kylle, it will check the current scene if this function below is needed.
+            if (currentSceneName == "Boss Fight 1")
+            {
+                return;
+            }
+            
             if (virtualCameraForStage.activeInHierarchy)
             {
                 virtualCameraForStage.SetActive(false);
