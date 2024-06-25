@@ -395,13 +395,16 @@ public class LevelManager : Singleton<LevelManager>
                 currentTargetPlatform = platform;
 
                 //get highest ceiling platform
-                if (currentTargetPlatform.transform.position.y > currentLandingPlatform.transform.position.y)
+                if (currentLandingPlatform != null && currentTargetPlatform != null)
                 {
-                    highestCeilingPlatform = currentTargetPlatform.transform;
-                }
-                else
-                {
-                    highestCeilingPlatform = currentLandingPlatform.transform;
+                    if (currentTargetPlatform.transform.position.y > currentLandingPlatform.transform.position.y)
+                    {
+                        highestCeilingPlatform = currentTargetPlatform.transform;
+                    }
+                    else
+                    {
+                        highestCeilingPlatform = currentLandingPlatform.transform;
+                    }
                 }
 
                 //adjust camera zoom 

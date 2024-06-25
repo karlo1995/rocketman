@@ -33,7 +33,7 @@ public class PlayerDeathController : Singleton<PlayerDeathController>
             {
                 if (isForceDeath ||
                     transform.position.y < failThreshold && !isDropped ||
-                    (PlayerTriggerCollisionController.Instance.IsStageCameraActive() && IsOutsideLevel()))
+                    (IsOutsideLevel()))
                 {
                     isForceDeath = false;
                     isDropped = true;

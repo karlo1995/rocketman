@@ -51,9 +51,16 @@ public class PlayerDragController : Singleton<PlayerDragController>
         }
     }
 
-    public void SetCanDrag()
+    public void SetCanDrag(bool activateDrag = true)
     {
-        StartCoroutine(SetActiveDrag());
+        if (activateDrag)
+        {
+            StartCoroutine(SetActiveDrag());
+        }
+        else
+        {
+            canDrag = false;
+        }
     }
 
     private IEnumerator SetActiveDrag()
@@ -84,7 +91,7 @@ public class PlayerDragController : Singleton<PlayerDragController>
     {
         //TODO: band aid fix need to change please!!
         var currentSceneName = SceneManager.GetActiveScene().name; //added by kylle, it will check the current scene if this function below is needed.
-        if(currentSceneName != "Boss Fight 1")
+        if (currentSceneName != "Boss Fight 1")
         {
             if (!DisplayDialogue.Instance.IsOpen && !LevelManager.Instance.IsTransitioning)
             {

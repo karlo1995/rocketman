@@ -83,6 +83,8 @@ public class PlayerTriggerCollisionController : Script.Misc.Singleton<PlayerTrig
             
             PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
             PlayerAnimationController.Instance.PlayAnimation(AnimationNames.FALLING_ANIMATION_NAME, true);
+            
+            PlayerDragController.Instance.SetCanDrag(false);
 
             StartCoroutine(ResetWallCollider(collider));
         }

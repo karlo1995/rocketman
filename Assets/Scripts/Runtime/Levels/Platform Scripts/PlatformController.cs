@@ -103,14 +103,14 @@ namespace Runtime.Levels.Platform_Scripts
             isActive = true;
             if (spriteRenderer != null)
             {
+                gameObject.SetActive(true);
                 spriteRenderer.DOFade(1f, 0.3f).OnComplete(() => { gameObject.SetActive(true); }).SetUpdate(true);
             }
             else if(meshRenderer != null)
             {
+                gameObject.SetActive(true);
                 gameObject.GetComponent<MeshRenderer>().materials[0].DOFade(1f, 0.3f).OnComplete(() =>
-                {
-                    gameObject.SetActive(true); 
-                    
+                {   
                     //check if platform is collapsing platform
                     if (isCollapsingPlatform)
                     {
