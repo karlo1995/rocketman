@@ -76,6 +76,9 @@ namespace Runtime.Levels
         [BoxGroup("$Combined", centerLabel: true)]
         [SerializeField] private TestCollectibleData[] collectibleDataToSpawn;
         
+        [BoxGroup("$Combined", centerLabel: true)]
+        [SerializeField] private bool shouldRemoveColliderUponExit;
+        
         public int PlatformCount => platformCount;
         public string PlatformPrefabId => platformPrefabId;
         public Vector2 PlatformPosition => platformPosition;
@@ -83,6 +86,7 @@ namespace Runtime.Levels
         public string[] WallIdToSpawn => wallIdToSpawn;
         public string CameraIdToUse => cameraIdToUse;
         public float CameraZoomValue => cameraZoomValue;
+        public bool ShouldRemoveColliderUponExit => shouldRemoveColliderUponExit;
 
         public Vector2 GetSpawnPosition()
         {
