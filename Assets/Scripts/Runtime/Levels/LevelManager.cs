@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-using System.Threading.Tasks;
 using Cinemachine;
 using DG.Tweening;
 using Runtime.Levels;
@@ -41,9 +40,9 @@ public class LevelManager : Singleton<LevelManager>
     public PlatformController CurrentLandingPlatform => currentLandingPlatform;
     public PlatformController CurrentTargetPlatform => currentTargetPlatform;
 
-    private Transform highestCeilingPlatform;
+    public Transform highestCeilingPlatform;
     public Transform HighestCeilingPlatform => highestCeilingPlatform;
-    
+
     private int platformSpawnCounter;
     private int collectibleSpawnCounter;
 
@@ -92,55 +91,41 @@ public class LevelManager : Singleton<LevelManager>
     {
         foreach (var collectible in collectibleData)
         {
-            var alreadyCollected = false;
-            foreach (var item in collectedCollectibleData)
+            if (prefabPool.ContainsKey(collectible.CollectibleId))
             {
-                if (item.Equals(collectible))
+                if (collectibleSpawnCounter >= prefabPool[collectible.CollectibleId].Count)
                 {
-                    alreadyCollected = true;
-                    break;
+                    collectibleSpawnCounter = 0;
                 }
-            }
 
-            if (!alreadyCollected)
-            {
-                if (prefabPool.ContainsKey(collectible.CollectibleId))
+                if (!prefabPool[collectible.CollectibleId][collectibleSpawnCounter].activeInHierarchy)
                 {
-                    var spawnedCollectible = false;
-                    if (collectibleSpawnCounter >= prefabPool[collectible.CollectibleId].Count)
+                    var collectibleObjectPool = prefabPool[collectible.CollectibleId][collectibleSpawnCounter].gameObject;
+
+                    collectibleObjectPool.transform.position = collectible.CollectiblePosition;
+
+                    if (collectibleObjectPool.TryGetComponent(out CollectibleItem item))
                     {
-                        collectibleSpawnCounter = 0;
+                        collectibleSpawnCounter++;
+
+                        item.Init(collectible);
+                        spawnedCollectibleItem.Add(item);
                     }
+                }
+                else
+                {
+                    //if there are no available collectible, create a new one then return
+                    var newCollectible = Instantiate(prefabPool[collectible.CollectibleId][0], transform);
+                    prefabPool[collectible.CollectibleId].Add(newCollectible);
 
-                    if (!prefabPool[collectible.CollectibleId][collectibleSpawnCounter].activeInHierarchy)
+                    newCollectible.transform.position = collectible.CollectiblePosition;
+
+                    if (newCollectible.TryGetComponent(out CollectibleItem item))
                     {
-                        var collectibleObjectPool = prefabPool[collectible.CollectibleId][collectibleSpawnCounter].gameObject;
+                        collectibleSpawnCounter++;
 
-                        collectibleObjectPool.transform.position = collectible.CollectiblePosition;
-
-                        if (collectibleObjectPool.TryGetComponent(out CollectibleItem item))
-                        {
-                            collectibleSpawnCounter++;
-
-                            item.Init(collectible);
-                            spawnedCollectibleItem.Add(item);
-                        }
-                    }
-                    else
-                    {
-                        //if there are no available collectible, create a new one then return
-                        var newCollectible = Instantiate(prefabPool[collectible.CollectibleId][0], transform);
-                        prefabPool[collectible.CollectibleId].Add(newCollectible);
-
-                        newCollectible.transform.position = collectible.CollectiblePosition;
-
-                        if (newCollectible.TryGetComponent(out CollectibleItem item))
-                        {
-                            collectibleSpawnCounter++;
-
-                            item.Init(collectible);
-                            spawnedCollectibleItem.Add(item);
-                        }
+                        item.Init(collectible);
+                        spawnedCollectibleItem.Add(item);
                     }
                 }
             }
@@ -256,7 +241,7 @@ public class LevelManager : Singleton<LevelManager>
         {
             playerController.transform.DOMove(spawnPosition, 1f).OnComplete(() =>
             {
-                PlayerAnimationController.Instance.PlayAnimation(AnimationNames.BRAKE_ANIMATION_NAME, false);
+                //PlayerAnimationController.Instance.PlayAnimation(AnimationNames.BRAKE_ANIMATION_NAME, false);
                 PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
 
                 StartCoroutine(FallAnimationPlayer());
@@ -266,7 +251,7 @@ public class LevelManager : Singleton<LevelManager>
 
     private IEnumerator FallAnimationPlayer()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0f);
         playerControllerRigidBody.isKinematic = false;
         playerControllerRigidBody.velocity = Vector2.zero;
     }
@@ -292,6 +277,7 @@ public class LevelManager : Singleton<LevelManager>
 
         //set initial camera position
         cmVirtualCamera.Follow = cameraPositions[currentStageDetails.PlatformsData[0].CameraIdToUse];
+        highestCeilingPlatform = cameraPositions[currentStageDetails.PlatformsData[0].CameraIdToUse];
         cmVirtualCamera.m_Lens.OrthographicSize = currentStageDetails.PlatformsData[0].CameraZoomValue;
     }
 
@@ -328,6 +314,7 @@ public class LevelManager : Singleton<LevelManager>
 
                 platform.InitPlatform(platformDetails);
 
+                collectedCollectibleData.Clear();
                 foreach (var collectible in spawnedCollectibleItem)
                 {
                     collectible.SetActive(false, true);
@@ -383,7 +370,8 @@ public class LevelManager : Singleton<LevelManager>
                         //set is transitioning true to tell to others that camera is currently changing its follow
                         isTransitioning = true;
                         cmVirtualCamera.Follow = cameraPositions[platformDetails.CameraIdToUse];
-                        
+                        highestCeilingPlatform = cameraPositions[platformDetails.CameraIdToUse];
+
                         GameCameraController.Instance.SetHighestCeilingPositionInY();
 
                         //reset transitioning status
@@ -393,19 +381,6 @@ public class LevelManager : Singleton<LevelManager>
 
                 //set current target platform 
                 currentTargetPlatform = platform;
-
-                //get highest ceiling platform
-                if (currentLandingPlatform != null && currentTargetPlatform != null)
-                {
-                    if (currentTargetPlatform.transform.position.y > currentLandingPlatform.transform.position.y)
-                    {
-                        highestCeilingPlatform = currentTargetPlatform.transform;
-                    }
-                    else
-                    {
-                        highestCeilingPlatform = currentLandingPlatform.transform;
-                    }
-                }
 
                 //adjust camera zoom 
                 cmVirtualCamera.m_Lens.OrthographicSize = platformDetails.CameraZoomValue;
@@ -486,6 +461,11 @@ public class LevelManager : Singleton<LevelManager>
     private IEnumerator ResetLevelCoroutine()
     {
         playerControllerRigidBody.isKinematic = true;
+        
+        
+        currentLandingPlatform.ResetPlayer();
+        currentTargetPlatform.ResetPlayer();
+        
         var spawnPosition = currentLandingPlatform.GetSpawnPosition();
         var launchPosition = currentLandingPlatform.GetLaunchPosition();
 
@@ -510,16 +490,16 @@ public class LevelManager : Singleton<LevelManager>
                 yield return null;
             }
         }
-        
+
         //move the player controller in the spawn point platform
         playerController.transform.DOMove(launchPosition, 0f).OnComplete(() =>
         {
             //flip player controller based on where the next platform is
             PlayerAnimationController.Instance.ByPositionPlayerFlipX(currentTargetPlatform.transform.position);
-            
+
             playerController.transform.DOMove(spawnPosition, 0.5f).OnComplete(() =>
             {
-                PlayerAnimationController.Instance.PlayAnimation(AnimationNames.BRAKE_ANIMATION_NAME, false);
+              //  PlayerAnimationController.Instance.PlayAnimation(AnimationNames.BRAKE_ANIMATION_NAME, false);
                 PlayerAnimationController.Instance.PlayThrusterAnimation(false, false);
                 StartCoroutine(FallAnimationPlayer());
             });

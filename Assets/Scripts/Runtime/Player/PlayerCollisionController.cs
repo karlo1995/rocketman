@@ -20,7 +20,6 @@ public class PlayerCollisionController : Singleton<PlayerCollisionController>
         {
             if (col.gameObject.TryGetComponent(out PlatformController platform))
             {
-                Debug.Log("Landed player");
                 var samePlatform = false;
 
                 if (currentCollidedPlatform == null)

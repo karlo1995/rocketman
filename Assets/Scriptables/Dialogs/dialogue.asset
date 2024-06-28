@@ -21,7 +21,7 @@ MonoBehaviour:
       - Character: 3
         SpineAnimationName: Relieved
     - DialogueText: "Considering that something has been interfering with our sensors,
-        I'm glad we went so slowly. \u202FIt beats a crash landing any day.cha "
+        I'm glad we went so slowly. \u202FIt beats a crash landing any day."
       CharacterAnimations:
       - Character: 2
         SpineAnimationName: grimacing

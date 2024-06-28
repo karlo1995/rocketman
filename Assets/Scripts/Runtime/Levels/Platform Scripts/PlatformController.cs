@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
@@ -30,6 +29,8 @@ namespace Runtime.Levels.Platform_Scripts
 
         private CollapsingPlatform collapsingPlatform;
         public CollapsingPlatform CollapsingPlatform => collapsingPlatform;
+
+        private BoxCollider2D boxCollider2D;
         
         private void Awake()
         {
@@ -49,6 +50,11 @@ namespace Runtime.Levels.Platform_Scripts
                 this.collapsingPlatform = collapsingPlatform;
             }
 
+            if (gameObject.TryGetComponent(out BoxCollider2D boxCollider2D))
+            {
+                this.boxCollider2D = boxCollider2D;
+            }
+
             foreach (var trigger in platformTriggers)
             {
                 trigger.SetActive(false);
@@ -58,6 +64,8 @@ namespace Runtime.Levels.Platform_Scripts
         public void InitPlatform(TestPlatformData currentTestPlatformData)
         {
             this.currentTestPlatformData = currentTestPlatformData;
+            boxCollider2D.enabled = true;
+            
             transform.DOMove(currentTestPlatformData.PlatformPosition, 0f).OnComplete(SpawnPlatform).SetUpdate(true);
             
             foreach (var trigger in platformTriggers)
@@ -158,6 +166,11 @@ namespace Runtime.Levels.Platform_Scripts
         public void CollisionExitBehaviour()
         {
             PlayerDragController.Instance.AddPlatformControllerToCheck(this);
+
+            if (currentTestPlatformData.ShouldRemoveColliderUponExit)
+            {
+                boxCollider2D.enabled = false;
+            }
         }
 
         public void OpenAnimationTriggers()
@@ -201,6 +214,14 @@ namespace Runtime.Levels.Platform_Scripts
             {
                 yield return new WaitForSeconds(0.3f);
                 LevelManager.Instance.SpawnNextPlatform(this);
+            }
+        }
+
+        public void ResetPlayer()
+        {
+            if (currentTestPlatformData.ShouldRemoveColliderUponExit)
+            {
+                boxCollider2D.enabled = true;
             }
         }
     }

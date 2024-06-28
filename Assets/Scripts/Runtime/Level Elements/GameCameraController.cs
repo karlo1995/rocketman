@@ -6,15 +6,21 @@ public class GameCameraController : Singleton<GameCameraController>
     [SerializeField] private GameObject virtualCameraForStage;
     [SerializeField] private GameObject virtualCameraForPlayer;
     
+    private Camera mainCamera;
+
+
+    private void Awake()
+    {
+        mainCamera = Camera.main;
+    }
     public void SetHighestCeilingPositionInY()
     {
         virtualCameraForStage.SetActive(true);
         virtualCameraForPlayer.SetActive(false);
     }
 
-    private void Update()
+    /*private void Update()
     {
-        return;
         //TODO : band aid fix for now , checker if player animation is not null
         if (PlayerAnimationController.Instance != null)
         {
@@ -39,14 +45,17 @@ public class GameCameraController : Singleton<GameCameraController>
                 }
             }
         }
-    }
+    }*/
 
     private bool IsOnCeiling()
     {
         //check if player transform is outside right or left of the level
-        var playerPosition = PlayerAnimationController.Instance.transform.position;
-        Debug.Log(virtualCameraForStage.transform.position);
+        if (LevelManager.Instance.HighestCeilingPlatform != null)
+        {
+            var playerPosition = PlayerAnimationController.Instance.transform.position;
+            return playerPosition.y > LevelManager.Instance.HighestCeilingPlatform.position.y / 2f;
+        }
+
         return false;
-        //playerPosition.y > LevelManager.Instance.HighestCeilingPlatform.position.y;
     }
 }
